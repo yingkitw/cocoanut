@@ -1,0 +1,180 @@
+# Cocoanut Logo Design - Enhanced Version
+
+## Core Concept: "Cocoa + Rust = Cocoanut"
+
+The logo should cleverly combine the "cocoa" theme with Rust programming elements, creating a memorable and meaningful design.
+
+## Design Elements:
+
+### Primary Logo (200x200px)
+- **Main Shape**: A stylized coconut shell with a "rust" patina/oxidation effect
+- **Coconut Shell**: 
+  - Base: #8B4513 (saddle brown)
+  - Rust patina: #CD853F (peru) with #B22222 (fire brick) accents
+  - Texture: Subtle hexagonal pattern (like coconut fiber)
+- **Coconut "Eyes"**: Three dots forming a triangle, styled like Rust's crab mascot eyes
+- **Text**: "Cocoanut" in a modern, technical font (like Fira Code or JetBrains Mono)
+- **Accent**: Small Rust crab claw or gear element integrated into the design
+
+### Alternative Concepts:
+
+#### Concept 1: "Rusty Coconut"
+```
+    🦀
+   🥥
+  COCOANUT
+```
+- Coconut with rust-colored patches
+- Small crab elements
+- Technical, industrial feel
+
+#### Concept 2: "Cocoa Bean + Code"
+```
+    ☕
+   🦀
+  COCOANUT
+```
+- Stylized cocoa bean with code brackets
+- Rust crab elements
+- Coffee/development theme
+
+#### Concept 3: "Geometric Coconut"
+```
+    ◢
+   ◤◥
+  COCOANUT
+```
+- Angular, geometric coconut
+- Hexagonal patterns
+- Modern, technical aesthetic
+
+## Color Palette:
+
+### Primary Colors:
+- **Coconut Brown**: #8B4513 (saddle brown)
+- **Rust Orange**: #CD853F (peru)
+- **Rust Red**: #B22222 (fire brick)
+- **Coconut White**: #F5DEB3 (wheat)
+- **Text Gray**: #2F4F4F (dark slate gray)
+
+### Accent Colors:
+- **Rust Crab**: #FF6347 (tomato)
+- **Code Green**: #32CD32 (lime green)
+- **MacOS Blue**: #007AFF (system blue)
+
+## Typography:
+- **Primary Font**: JetBrains Mono (technical, readable)
+- **Fallback**: Fira Code, Consolas, Monaco
+- **Style**: Monospace, with subtle ligatures
+- **Weight**: Medium (500-600)
+
+## Design Principles:
+
+### 1. **Dual Meaning**
+- Visually represents both "cocoa" and "coconut"
+- Incorporates Rust programming language elements
+- Suggests macOS development (clean, native)
+
+### 2. **Technical Aesthetic**
+- Geometric shapes and patterns
+- Code-inspired elements
+- Modern, minimalist approach
+- Professional yet approachable
+
+### 3. **Scalability**
+- Works at 16x16px (favicon)
+- Clear at 32x32px (app icon)
+- Impressive at 200x200px (README)
+- Maintains clarity when scaled
+
+### 4. **Versatility**
+- Works on light backgrounds
+- Adapts to dark themes
+- Monochrome version available
+- High contrast for accessibility
+
+## Logo Variations:
+
+### 1. **Full Logo** (200x200px)
+- Complete design with text
+- Used in README, documentation
+- Full brand representation
+
+### 2. **Icon Only** (64x64px)
+- Just the coconut symbol
+- Used in app icons, favicons
+- Recognizable without text
+
+### 3. **Text Only** (Horizontal)
+- "Cocoanut" text with accent
+- Used in headers, banners
+- Clean, professional look
+
+### 4. **Monochrome** (Black/White)
+- Single color version
+- Used in print, stamps
+- Maintains recognition
+
+## Implementation Ideas:
+
+### SVG Version:
+```svg
+<svg width="200" height="200" viewBox="0 0 200 200">
+  <!-- Coconut shell with rust patina -->
+  <circle cx="100" cy="100" r="80" fill="#8B4513"/>
+  <path d="..." fill="#CD853F"/>
+  
+  <!-- Rust crab eyes -->
+  <circle cx="85" cy="85" r="8" fill="#B22222"/>
+  <circle cx="115" cy="85" r="8" fill="#B22222"/>
+  
+  <!-- Text -->
+  <text x="100" y="180" text-anchor="middle" font-family="JetBrains Mono" font-size="24" fill="#2F4F4F">COCOANUT</text>
+</svg>
+```
+
+### ASCII Art Version:
+```
+    🦀
+   🥥
+  COCOANUT
+    v0.1.0
+```
+
+## Brand Guidelines:
+
+### Usage Rules:
+- Minimum size: 16x16px
+- Clear space: 1x logo height
+- Background: White or transparent
+- Never distort or rotate
+
+### Color Variations:
+- **Light Theme**: Dark logo on light background
+- **Dark Theme**: Light logo on dark background
+- **Monochrome**: Single color version
+- **Accent**: Colored version for highlights
+
+## File Formats:
+- **SVG**: Primary format (scalable)
+- **PNG**: 200x200, 64x64, 32x32, 16x16
+- **ICO**: Favicon (16x16, 32x32, 48x48)
+- **PDF**: Print materials
+- **EPS**: Vector graphics
+
+## Inspiration Sources:
+- Rust programming language logo
+- macOS design language
+- Coconut imagery
+- Technical/developer aesthetics
+- Modern logo design trends
+
+## Testing Checklist:
+- [ ] Recognizable at 16x16px
+- [ ] Works on white background
+- [ ] Works on dark background
+- [ ] Monochrome version clear
+- [ ] Text readable at small sizes
+- [ ] Unique and memorable
+- [ ] Professional appearance
+- [ ] Easy to reproduce

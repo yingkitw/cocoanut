@@ -1,0 +1,252 @@
+//! UI controls for macOS GUI applications
+
+use crate::error::{CocoanutError, Result};
+use objc::runtime::Object;
+use objc::{msg_send, sel, sel_impl};
+use std::ffi::CString;
+
+/// A macOS button control
+pub struct Button {
+    ns_button: *mut Object,
+    title: String,
+}
+
+/// A macOS label control
+pub struct Label {
+    ns_label: *mut Object,
+    text: String,
+}
+
+/// A macOS text field control
+pub struct TextField {
+    ns_text_field: *mut Object,
+    text: String,
+}
+
+impl Button {
+    /// Create a new button
+    /// 
+    /// # Arguments
+    /// 
+    /// * `title` - The button title
+    /// 
+    /// # Returns
+    /// 
+    /// Returns a `Result<Button>` containing the new button instance
+    pub fn new(title: &str) -> Result<Self> {
+        unsafe {
+            let button_class = objc::class!(NSButton);
+            let ns_button: *mut Object = msg_send![button_class, alloc];
+            
+            let title_cstr = CString::new(title)
+                .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
+            
+            let frame: *mut Object = objc::msg_send![objc::class!(NSRect), new];
+            let ns_button: *mut Object = msg_send![
+                ns_button,
+                initWithFrame: frame
+            ];
+            
+            if ns_button.is_null() {
+                return Err(CocoanutError::ControlCreationFailed(
+                    "Failed to create NSButton".to_string()
+                ));
+            }
+            
+            // Set button title
+            let _: () = msg_send![ns_button, setTitle: title_cstr.as_ptr()];
+            
+            // Set button style
+            let _: () = msg_send![ns_button, setButtonType: 0]; // NSButtonTypeMomentaryPushIn
+            
+            Ok(Button {
+                ns_button,
+                title: title.to_string(),
+            })
+        }
+    }
+    
+    /// Get the button title
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+    
+    /// Set the button title
+    pub fn set_title(&mut self, title: &str) -> Result<()> {
+        unsafe {
+            let title_cstr = CString::new(title)
+                .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
+            let _: () = msg_send![self.ns_button, setTitle: title_cstr.as_ptr()];
+            self.title = title.to_string();
+            Ok(())
+        }
+    }
+    
+    /// Get the underlying NSButton pointer
+    pub(crate) fn ns_button(&self) -> *mut Object {
+        self.ns_button
+    }
+}
+
+impl Label {
+    /// Create a new label
+    /// 
+    /// # Arguments
+    /// 
+    /// * `text` - The label text
+    /// 
+    /// # Returns
+    /// 
+    /// Returns a `Result<Label>` containing the new label instance
+    pub fn new(text: &str) -> Result<Self> {
+        unsafe {
+            let label_class = objc::class!(NSTextField);
+            let ns_label: *mut Object = msg_send![label_class, alloc];
+            
+            let text_cstr = CString::new(text)
+                .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
+            
+            let frame: *mut Object = objc::msg_send![objc::class!(NSRect), new];
+            let ns_label: *mut Object = msg_send![
+                ns_label,
+                initWithFrame: frame
+            ];
+            
+            if ns_label.is_null() {
+                return Err(CocoanutError::ControlCreationFailed(
+                    "Failed to create NSTextField for label".to_string()
+                ));
+            }
+            
+            // Set label properties
+            let _: () = msg_send![ns_label, setStringValue: text_cstr.as_ptr()];
+            let _: () = msg_send![ns_label, setBezeled: false];
+            let _: () = msg_send![ns_label, setDrawsBackground: false];
+            let _: () = msg_send![ns_label, setEditable: false];
+            let _: () = msg_send![ns_label, setSelectable: false];
+            
+            Ok(Label {
+                ns_label,
+                text: text.to_string(),
+            })
+        }
+    }
+    
+    /// Get the label text
+    pub fn text(&self) -> &str {
+        &self.text
+    }
+    
+    /// Set the label text
+    pub fn set_text(&mut self, text: &str) -> Result<()> {
+        unsafe {
+            let text_cstr = CString::new(text)
+                .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
+            let _: () = msg_send![self.ns_label, setStringValue: text_cstr.as_ptr()];
+            self.text = text.to_string();
+            Ok(())
+        }
+    }
+    
+    /// Get the underlying NSTextField pointer
+    pub(crate) fn ns_label(&self) -> *mut Object {
+        self.ns_label
+    }
+}
+
+impl TextField {
+    /// Create a new text field
+    /// 
+    /// # Arguments
+    /// 
+    /// * `text` - The initial text content
+    /// 
+    /// # Returns
+    /// 
+    /// Returns a `Result<TextField>` containing the new text field instance
+    pub fn new(text: &str) -> Result<Self> {
+        unsafe {
+            let text_field_class = objc::class!(NSTextField);
+            let ns_text_field: *mut Object = msg_send![text_field_class, alloc];
+            
+            let text_cstr = CString::new(text)
+                .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
+            
+            let frame: *mut Object = objc::msg_send![objc::class!(NSRect), new];
+            let ns_text_field: *mut Object = msg_send![
+                ns_text_field,
+                initWithFrame: frame
+            ];
+            
+            if ns_text_field.is_null() {
+                return Err(CocoanutError::ControlCreationFailed(
+                    "Failed to create NSTextField".to_string()
+                ));
+            }
+            
+            // Set text field properties
+            let _: () = msg_send![ns_text_field, setStringValue: text_cstr.as_ptr()];
+            let _: () = msg_send![ns_text_field, setBezeled: true];
+            let _: () = msg_send![ns_text_field, setDrawsBackground: true];
+            let _: () = msg_send![ns_text_field, setEditable: true];
+            let _: () = msg_send![ns_text_field, setSelectable: true];
+            
+            Ok(TextField {
+                ns_text_field,
+                text: text.to_string(),
+            })
+        }
+    }
+    
+    /// Get the text field content
+    pub fn text(&self) -> &str {
+        &self.text
+    }
+    
+    /// Set the text field content
+    pub fn set_text(&mut self, text: &str) -> Result<()> {
+        unsafe {
+            let text_cstr = CString::new(text)
+                .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
+            let _: () = msg_send![self.ns_text_field, setStringValue: text_cstr.as_ptr()];
+            self.text = text.to_string();
+            Ok(())
+        }
+    }
+    
+    /// Get the underlying NSTextField pointer
+    pub(crate) fn ns_text_field(&self) -> *mut Object {
+        self.ns_text_field
+    }
+}
+
+impl Drop for Button {
+    fn drop(&mut self) {
+        unsafe {
+            let _: () = msg_send![self.ns_button, release];
+        }
+    }
+}
+
+impl Drop for Label {
+    fn drop(&mut self) {
+        unsafe {
+            let _: () = msg_send![self.ns_label, release];
+        }
+    }
+}
+
+impl Drop for TextField {
+    fn drop(&mut self) {
+        unsafe {
+            let _: () = msg_send![self.ns_text_field, release];
+        }
+    }
+}
+
+unsafe impl Send for Button {}
+unsafe impl Sync for Button {}
+unsafe impl Send for Label {}
+unsafe impl Sync for Label {}
+unsafe impl Send for TextField {}
+unsafe impl Sync for TextField {}
