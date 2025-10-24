@@ -16,9 +16,12 @@
 
 ## In Progress 🔄
 
-- [ ] Fix compilation errors and warnings
-- [ ] Add more comprehensive error handling
-- [ ] Improve documentation
+- [x] **Builder Patterns**: Fluent API for controls (Button, Label, TextField)
+- [x] **Layout System**: VStack, HStack for declarative UI composition
+- [x] **Carbon Design System**: Professional styling and theming
+- [ ] **Window Builder**: Fluent window creation API
+- [ ] **Event Binding**: Simplified on_click, on_change handlers
+- [ ] **Helper Macros**: Declarative UI macros
 
 ## 🚀 COMPETITIVE ADVANTAGES - Making Cocoanut Better
 

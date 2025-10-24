@@ -37,6 +37,17 @@ impl Window {
     /// }
     /// ```
     pub fn new(title: &str, width: f64, height: f64) -> Result<Self> {
+        #[cfg(feature = "test-mock")]
+        {
+            return Ok(Window {
+                ns_window: std::ptr::null_mut(),
+                title: title.to_string(),
+                width,
+                height,
+            });
+        }
+        
+        #[cfg(not(feature = "test-mock"))]
         unsafe {
             let window_class = objc::class!(NSWindow);
             let rect_class = objc::class!(NSRect);
@@ -95,6 +106,13 @@ impl Window {
     
     /// Set the window title
     pub fn set_title(&mut self, title: &str) -> Result<()> {
+        #[cfg(feature = "test-mock")]
+        {
+            self.title = title.to_string();
+            return Ok(());
+        }
+        
+        #[cfg(not(feature = "test-mock"))]
         unsafe {
             let title_cstr = CString::new(title)
                 .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
@@ -111,6 +129,14 @@ impl Window {
     
     /// Set window size
     pub fn set_size(&mut self, width: f64, height: f64) -> Result<()> {
+        #[cfg(feature = "test-mock")]
+        {
+            self.width = width;
+            self.height = height;
+            return Ok(());
+        }
+        
+        #[cfg(not(feature = "test-mock"))]
         unsafe {
             let size_class = objc::class!(NSSize);
             let size: *mut Object = objc::msg_send![size_class, new];
@@ -126,6 +152,12 @@ impl Window {
     
     /// Show the window
     pub fn show(&self) -> Result<()> {
+        #[cfg(feature = "test-mock")]
+        {
+            return Ok(());
+        }
+        
+        #[cfg(not(feature = "test-mock"))]
         unsafe {
             let _: () = msg_send![self.ns_window, makeKeyAndOrderFront: self.ns_window];
             Ok(())
@@ -134,6 +166,12 @@ impl Window {
     
     /// Hide the window
     pub fn hide(&self) -> Result<()> {
+        #[cfg(feature = "test-mock")]
+        {
+            return Ok(());
+        }
+        
+        #[cfg(not(feature = "test-mock"))]
         unsafe {
             let _: () = msg_send![self.ns_window, orderOut: self.ns_window];
             Ok(())
@@ -142,6 +180,12 @@ impl Window {
     
     /// Close the window
     pub fn close(&self) -> Result<()> {
+        #[cfg(feature = "test-mock")]
+        {
+            return Ok(());
+        }
+        
+        #[cfg(not(feature = "test-mock"))]
         unsafe {
             let _: () = msg_send![self.ns_window, close];
             Ok(())
@@ -150,6 +194,12 @@ impl Window {
     
     /// Check if window is visible
     pub fn is_visible(&self) -> bool {
+        #[cfg(feature = "test-mock")]
+        {
+            return false;
+        }
+        
+        #[cfg(not(feature = "test-mock"))]
         unsafe {
             let visible: bool = msg_send![self.ns_window, isVisible];
             visible
@@ -164,6 +214,7 @@ impl Window {
 
 impl Drop for Window {
     fn drop(&mut self) {
+        #[cfg(not(feature = "test-mock"))]
         unsafe {
             let _: () = msg_send![self.ns_window, release];
         }

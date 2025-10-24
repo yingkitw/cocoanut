@@ -10,6 +10,9 @@ A Rust wrapper for Cocoa to develop macOS-specific GUI applications.
 
 ## Features
 
+- **Builder Patterns**: Fluent, chainable API for creating UI components
+- **Layout System**: VStack/HStack for declarative UI composition
+- **Carbon Design System**: Professional styling and theming out of the box
 - **Window Management**: Create and manage native macOS windows
 - **Menu System**: Build application menus and context menus
 - **Controls**: Native macOS UI controls and widgets
@@ -70,16 +73,24 @@ impl AppDelegate for MyApp {
 ```
 
 ### **cocoanut** (Our Crate)
-- **Level**: Low to mid-level abstraction
-- **Features**: Educational approach, clear documentation, custom error handling, modular design
-- **Use Case**: Learning Cocoa development, educational projects, starting point
+- **Level**: Low to mid-level abstraction with high-level ergonomics
+- **Features**: Builder patterns, layout system, Carbon Design System, fluent API, educational approach
+- **Use Case**: Learning Cocoa development, rapid prototyping, modern Rust GUI apps
 - **Example**:
 ```rust
-use cocoanut::{Application, Window, Button};
+use cocoanut::prelude::*;
 
 let app = Application::new("My App")?;
-let window = Window::new(800.0, 600.0)?;
-let button = Button::new("Click me", 100.0, 50.0)?;
+let window = Window::new("My Window", 800.0, 600.0)?;
+
+let button = Button::builder()
+    .title("Click me")
+    .size(100.0, 50.0)
+    .build()?;
+
+let vstack = VStack::new()
+    .spacing(Spacing::standard())
+    .alignment(Alignment::Center);
 ```
 
 ### Comparison Table
@@ -90,7 +101,7 @@ let button = Button::new("Click me", 100.0, 50.0)?;
 | `objc2` | Low | Medium | High | High | Active |
 | `cocoa` | Medium | Medium | Medium | High | Stagnant |
 | `cacao` | High | High | Low | Medium | Active |
-| `cocoanut` | Low-Medium | Medium | Medium | High | New |
+| `cocoanut` | Low-Medium | High | Low | High | Active |
 
 ### Recommendation
 
@@ -98,6 +109,19 @@ let button = Button::new("Click me", 100.0, 50.0)?;
 - **For production**: Use `cacao` for modern apps, `objc2` for performance-critical apps
 - **For legacy**: Use `cocoa` if you need specific Cocoa features
 - **For system programming**: Use `objc` or `objc2`
+
+## What Makes Cocoanut Different?
+
+### Simplified API Over Raw objc/cocoa
+
+Cocoanut provides **idiomatic Rust abstractions** that make GUI development easier:
+
+- **Builder Patterns**: Fluent API instead of multiple method calls
+- **Layout System**: Declarative VStack/HStack instead of manual positioning
+- **Design System**: Carbon Design System colors and typography built-in
+- **Type Safety**: No raw pointers or unsafe code in public API
+
+See [SIMPLIFICATION_GUIDE.md](docs/SIMPLIFICATION_GUIDE.md) for detailed comparisons.
 
 ## Quick Start
 
@@ -120,6 +144,25 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     app.run(window)?;
     Ok(())
 }
+```
+
+Create UI with builders and layout:
+
+```rust
+use cocoanut::prelude::*;
+
+let button = Button::builder()
+    .title("Click Me")
+    .size(100.0, 50.0)
+    .build()?;
+
+let label = Label::builder()
+    .text("Hello, Cocoanut!")
+    .build()?;
+
+let vstack = VStack::new()
+    .spacing(Spacing::standard())
+    .alignment(Alignment::Center);
 ```
 
 ## Architecture

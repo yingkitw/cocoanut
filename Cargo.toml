@@ -9,6 +9,10 @@ repository = "https://github.com/yingkitw/cocoanut"
 keywords = ["cocoa", "macos", "gui", "native", "appkit"]
 categories = ["gui", "os::macos-apis"]
 
+[features]
+default = []
+test-mock = []
+
 [dependencies]
 objc = "0.2"
 cocoa = "0.25"
@@ -31,6 +35,51 @@ serde_json = "1.0"
 [dev-dependencies]
 criterion = "0.5"
 insta = "1.39"
+
+[[test]]
+name = "control_tests_simple"
+path = "tests/control_tests_simple.rs"
+required-features = ["test-mock"]
+
+[[test]]
+name = "async_tests_simple"
+path = "tests/async_tests_simple.rs"
+required-features = ["test-mock"]
+
+[[test]]
+name = "drawing_tests_simple"
+path = "tests/drawing_tests_simple.rs"
+required-features = ["test-mock"]
+
+[[test]]
+name = "integration_tests"
+path = "tests/integration_tests.rs"
+required-features = ["test-mock"]
+
+[[test]]
+name = "macos_integration_tests_simple"
+path = "tests/macos_integration_tests_simple.rs"
+required-features = ["test-mock"]
+
+[[test]]
+name = "streaming_tests_simple"
+path = "tests/streaming_tests_simple.rs"
+required-features = ["test-mock"]
+
+[[test]]
+name = "window_tests"
+path = "tests/window_tests.rs"
+required-features = ["test-mock"]
+
+[[test]]
+name = "zero_cost_tests_simple"
+path = "tests/zero_cost_tests_simple.rs"
+required-features = ["test-mock"]
+
+[[test]]
+name = "component_tests"
+path = "tests/component_tests.rs"
+required-features = ["test-mock"]
 
 [lib]
 name = "cocoanut"

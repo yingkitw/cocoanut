@@ -44,6 +44,9 @@ pub mod async_ui;
 pub mod streaming;
 pub mod zero_cost;
 pub mod macos_integration;
+pub mod builder;
+pub mod layout;
+pub mod styling;
 
 /// Re-exports for convenient usage
 pub mod prelude {
@@ -65,6 +68,17 @@ pub mod prelude {
         MacOSIntegrationManager, DesignLanguageManager, AccessibilityManager, DarkModeManager, TouchBarManager,
         DesignStyle, Appearance, TouchBarItem, DesignLanguageComponent, AccessibleComponent,
         NativeWindow, NativeButton
+    };
+    
+    // Builders for simplified API
+    pub use crate::builder::{ButtonBuilder, LabelBuilder, TextFieldBuilder};
+    
+    // Layout system
+    pub use crate::layout::{VStack, HStack, Spacer, Spacing, Alignment};
+    
+    // Styling system
+    pub use crate::styling::{
+        CarbonColor, TypographyScale, SpacingScale, CornerRadiusScale, ComponentStyle,
     };
 }
 
