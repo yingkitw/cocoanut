@@ -42,7 +42,19 @@ pub mod utils;
 // High-level API
 pub mod window;
 pub mod menu;
-pub mod simple_app;
+pub mod simple_app {
+    pub mod component;
+    pub mod layout;
+    pub mod app;
+    
+    pub use component::{Kind, Comp};
+    pub use layout::Layout;
+    pub use app::SimpleApp;
+    
+    pub fn app(name: &str) -> SimpleApp {
+        SimpleApp::new(name)
+    }
+}
 pub mod application;
 pub mod async_ui;
 pub mod streaming;

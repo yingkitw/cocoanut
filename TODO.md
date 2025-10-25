@@ -37,10 +37,12 @@
 
 ### Examples & Documentation
 - [x] 11 working examples
+- [x] 2 layout & containers demos (NEW)
 - [x] Comprehensive documentation
 - [x] API reference
 - [x] Architecture guide
 - [x] Migration guide
+- [x] Layout & Containers guide (NEW)
 
 ### Quality Assurance
 - [x] 260+ tests (all passing)
@@ -108,6 +110,14 @@
 - [x] Organized archived documentation
 - [x] Clear navigation structure
 
+### Layout & Containers Demo (Completed Oct 25, 2025)
+- [x] Created layout_and_containers_demo.rs (educational overview)
+- [x] Created layout_patterns.rs (real-world patterns)
+- [x] Created docs/LAYOUT_CONTAINERS_DEMO.md (comprehensive guide)
+- [x] Updated README.md with new examples
+- [x] Both examples build and run successfully
+- [x] Demonstrates 6 layout patterns and 4 container types
+
 ---
 
 ## 📊 Project Statistics
@@ -120,8 +130,8 @@
 - **macOS Features**: 5 native integrations
 
 ### Documentation
-- **Core Docs**: 7 main files
-- **Examples**: 11 working examples
+- **Core Docs**: 8 main files (+ LAYOUT_CONTAINERS_DEMO.md)
+- **Examples**: 16 working examples (+ 2 layout demos)
 - **Code Comments**: Comprehensive
 - **API Reference**: Complete
 

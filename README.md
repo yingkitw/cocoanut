@@ -122,11 +122,25 @@ cargo run --example menu_app
 
 # Comprehensive component demo
 cargo run --example comprehensive_app
+
+# Layout & Containers Demo - Educational overview
+cargo run --example layout_and_containers_demo
+
+# Layout Patterns Demo - Real-world patterns
+cargo run --example layout_patterns
+
+# Containers with Borders Demo - Visual container demonstration
+cargo run --example containers_with_borders
 ```
 
 All examples display real macOS GUI windows with interactive components. Press `Cmd+Q` to quit.
 
-See [docs/EXAMPLES_AND_TESTS.md](docs/EXAMPLES_AND_TESTS.md) for detailed examples.
+**Layout & Containers Demos:**
+- [docs/VISUAL_LAYOUT_DEMO.md](docs/VISUAL_LAYOUT_DEMO.md) - Visual GUI with 50+ interactive components
+- [docs/CONTAINERS_WITH_BORDERS.md](docs/CONTAINERS_WITH_BORDERS.md) - Containers with visual borders (NEW)
+- [docs/LAYOUT_CONTAINERS_DEMO.md](docs/LAYOUT_CONTAINERS_DEMO.md) - Comprehensive layout guide
+
+See [docs/EXAMPLES_AND_TESTS.md](docs/EXAMPLES_AND_TESTS.md) for all examples.
 
 ## Requirements
 
