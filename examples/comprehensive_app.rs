@@ -123,24 +123,32 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     let _ = (feel, dark, touchbar, continuity);
 
     println!("📊 Component Summary:");
-    println!("  • Basic Controls: 3 (Button, Label, TextField)");
+    println!("  • Basic Controls: 8 (3 Buttons, 2 Labels, 2 TextFields, 1 Button)");
     println!("  • Advanced Views: 4 (TableView, CollectionView, SplitView, TabView)");
     println!("  • Web Component: 1 (WebView)");
     println!("  • Systems: 4 (Events, Layout, Animation, DataBinding)");
     println!("  • macOS Features: 5 (NativeFeel, Accessibility, DarkMode, TouchBar, Continuity)");
-    println!("  • Total: 17 components/systems\n");
+    println!("  • Total: 22 components/systems\n");
 
     println!("🚀 Launching GUI window with all components...\n");
     println!("Press Cmd+Q to quit\n");
 
-    // Create a window using SimpleApp with components
+    // Create a window using SimpleApp with detailed components
     app("Comprehensive Demo")
-        .title("🥥 Cocoanut - Comprehensive Component Demo (17 Components)")
+        .title("🥥 Cocoanut - Comprehensive Component Demo (22 Components)")
         .size(1000.0, 800.0)
         .centered(true)
-        .add(ComponentConfig::new(ComponentType::Button))
-        .add(ComponentConfig::new(ComponentType::Label))
-        .add(ComponentConfig::new(ComponentType::TextField))
+        // Basic Controls - Detailed
+        .add(Comp::new(Kind::Button).text("Save Document").size(150.0, 40.0))
+        .add(Comp::new(Kind::Label).text("Application Status: Ready").size(400.0, 25.0))
+        .add(Comp::new(Kind::TextField).text("Enter project name...").size(350.0, 30.0))
+        // Additional Controls
+        .add(Comp::new(Kind::Button).text("Export").size(120.0, 35.0))
+        .add(Comp::new(Kind::Label).text("Version 1.0.0 - Built with Cocoanut").size(400.0, 20.0))
+        .add(Comp::new(Kind::TextField).text("Search...").size(300.0, 28.0))
+        // More Buttons
+        .add(Comp::new(Kind::Button).text("Settings").size(120.0, 35.0))
+        .add(Comp::new(Kind::Button).text("Help").size(100.0, 35.0))
         .run()?;
 
     println!("\n✅ Application closed");

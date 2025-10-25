@@ -21,8 +21,8 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         .title("🥥 Cocoanut - Two Buttons Example")
         .size(600.0, 400.0)
         .centered(true)
-        .add(ComponentConfig::new(ComponentType::Button).text("Button 1"))
-        .add(ComponentConfig::new(ComponentType::Button).text("Button 2"))
+        .add(Comp::new(Kind::Button).text("Button 1"))
+        .add(Comp::new(Kind::Button).text("Button 2"))
         .run()?;
 
     println!("\n✅ Application closed");

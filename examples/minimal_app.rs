@@ -23,9 +23,9 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         .title("🥥 Cocoanut - Minimal Example")
         .size(600.0, 400.0)
         .centered(true)
-        .add(ComponentConfig::new(ComponentType::Button))
-        .add(ComponentConfig::new(ComponentType::Label))
-        .add(ComponentConfig::new(ComponentType::TextField))
+        .add(Comp::new(Kind::Button))
+        .add(Comp::new(Kind::Label))
+        .add(Comp::new(Kind::TextField))
         .run()?;
 
     println!("\n✅ Application closed");

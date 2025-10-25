@@ -25,25 +25,25 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         .centered(true)
         // Button with custom text and size
         .add(
-            ComponentConfig::new(ComponentType::Button)
+            Comp::new(Kind::Button)
                 .text("Save Document")
                 .size(150.0, 40.0)
         )
         // Label with custom text
         .add(
-            ComponentConfig::new(ComponentType::Label)
+            Comp::new(Kind::Label)
                 .text("Enter your name:")
                 .size(300.0, 25.0)
         )
         // TextField with custom placeholder
         .add(
-            ComponentConfig::new(ComponentType::TextField)
+            Comp::new(Kind::TextField)
                 .text("John Doe")
                 .size(300.0, 30.0)
         )
         // Another button with different text
         .add(
-            ComponentConfig::new(ComponentType::Button)
+            Comp::new(Kind::Button)
                 .text("Cancel")
                 .size(150.0, 40.0)
         )
