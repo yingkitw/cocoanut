@@ -211,7 +211,7 @@ pub mod prelude {
     };
     
     // Simple high-level API
-    pub use crate::simple_app::{SimpleApp, app};
+    pub use crate::simple_app::{SimpleApp, app, ComponentType};
 }
 
 pub use core::error::{CocoanutError, Result};

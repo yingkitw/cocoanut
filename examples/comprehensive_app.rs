@@ -133,11 +133,14 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     println!("🚀 Launching GUI window with all components...\n");
     println!("Press Cmd+Q to quit\n");
 
-    // Create a window using SimpleApp
+    // Create a window using SimpleApp with components
     app("Comprehensive Demo")
         .title("🥥 Cocoanut - Comprehensive Component Demo (17 Components)")
         .size(1000.0, 800.0)
         .centered(true)
+        .with_component(ComponentType::Button)
+        .with_component(ComponentType::Label)
+        .with_component(ComponentType::TextField)
         .run()?;
 
     println!("\n✅ Application closed");

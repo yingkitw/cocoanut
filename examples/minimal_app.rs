@@ -13,20 +13,19 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     println!("🥥 Minimal Cocoanut Application Example\n");
 
     println!("Creating window...");
-    let window = Window::builder()
-        .title("Minimal App - Cocoanut")
-        .size(600.0, 400.0)
-        .center()
-        .build()?;
-    
     println!("✓ Window created (600x400, centered)\n");
 
     println!("🚀 Launching GUI window...\n");
     println!("Press Cmd+Q to quit\n");
     
-    // Create app and run - components will be added during app initialization
+    // Create app with components and run
     app("Minimal App")
-        .with_window(window)
+        .title("🥥 Cocoanut - Minimal Example")
+        .size(600.0, 400.0)
+        .centered(true)
+        .with_component(ComponentType::Button)
+        .with_component(ComponentType::Label)
+        .with_component(ComponentType::TextField)
         .run()?;
 
     println!("\n✅ Application closed");
