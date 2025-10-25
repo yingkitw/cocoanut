@@ -6,6 +6,7 @@
 //! Run with: cargo run --example two_buttons
 
 use cocoanut::prelude::*;
+use cocoanut::simple_app::Layout;
 
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     println!("🥥 Two Buttons Example\n");
@@ -16,11 +17,12 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     println!("🚀 Launching GUI window...\n");
     println!("Press Cmd+Q to quit\n");
     
-    // Create app with 2 buttons
+    // Create app with 2 buttons (using compact layout)
     app("Two Buttons App")
         .title("🥥 Cocoanut - Two Buttons Example")
         .size(600.0, 400.0)
         .centered(true)
+        .layout(Layout::compact())
         .add(Comp::new(Kind::Button).text("Button 1"))
         .add(Comp::new(Kind::Button).text("Button 2"))
         .run()?;

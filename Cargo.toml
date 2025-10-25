@@ -117,10 +117,6 @@ name = "comprehensive_app"
 path = "examples/comprehensive_app.rs"
 
 [[example]]
-name = "comprehensive_app_simple"
-path = "examples/comprehensive_app_simple.rs"
-
-[[example]]
 name = "minimal_app"
 path = "examples/minimal_app.rs"
 

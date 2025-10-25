@@ -8,6 +8,7 @@
 //! Run with: cargo run --example flexible_components
 
 use cocoanut::prelude::*;
+use cocoanut::simple_app::Layout;
 
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     println!("🥥 Flexible Components Example\n");
@@ -18,11 +19,12 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     println!("🚀 Launching GUI window...\n");
     println!("Press Cmd+Q to quit\n");
     
-    // Create app with custom-configured components
+    // Create app with custom-configured components (using spacious layout)
     app("Flexible Components")
         .title("🥥 Cocoanut - Flexible Components Example")
         .size(700.0, 500.0)
         .centered(true)
+        .layout(Layout::spacious())
         // Button with custom text and size
         .add(
             Comp::new(Kind::Button)

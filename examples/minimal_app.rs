@@ -8,6 +8,7 @@
 //! Run with: cargo run --example minimal_app
 
 use cocoanut::prelude::*;
+use cocoanut::simple_app::Layout;
 
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     println!("🥥 Minimal Cocoanut Application Example\n");
@@ -18,11 +19,12 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     println!("🚀 Launching GUI window...\n");
     println!("Press Cmd+Q to quit\n");
     
-    // Create app with components and run
+    // Create app with components and run (using default Streamlit-like layout)
     app("Minimal App")
         .title("🥥 Cocoanut - Minimal Example")
         .size(600.0, 400.0)
         .centered(true)
+        .layout(Layout::default())
         .add(Comp::new(Kind::Button))
         .add(Comp::new(Kind::Label))
         .add(Comp::new(Kind::TextField))

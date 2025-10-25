@@ -17,6 +17,16 @@ pub enum Kind {
     Label,
     /// NSTextField used as input field (editable)
     TextField,
+    /// Checkbox control
+    Checkbox,
+    /// Radio button control
+    Radio,
+    /// Slider control
+    Slider,
+    /// Dropdown/Popup button
+    Dropdown,
+    /// TextArea (multi-line text)
+    TextArea,
 }
 
 /// Configurable component with customizable properties
@@ -39,6 +49,11 @@ impl Comp {
             Kind::Button => ("Click Me!".to_string(), 100.0, 40.0),
             Kind::Label => ("Label".to_string(), 300.0, 30.0),
             Kind::TextField => ("Enter text".to_string(), 300.0, 30.0),
+            Kind::Checkbox => ("Checkbox".to_string(), 150.0, 25.0),
+            Kind::Radio => ("Radio Option".to_string(), 150.0, 25.0),
+            Kind::Slider => ("Slider".to_string(), 250.0, 25.0),
+            Kind::Dropdown => ("Select option".to_string(), 180.0, 30.0),
+            Kind::TextArea => ("Multi-line text...".to_string(), 400.0, 80.0),
         };
         
         Comp {
@@ -75,6 +90,50 @@ impl Comp {
     }
 }
 
+/// Layout configuration inspired by Streamlit
+/// Components flow vertically in a single column with automatic spacing
+#[derive(Debug, Clone, Copy)]
+pub struct Layout {
+    /// Top padding from window edge
+    pub top_padding: f64,
+    /// Left/Right padding (margins)
+    pub horizontal_margin: f64,
+    /// Vertical spacing between components (gap)
+    pub gap: f64,
+}
+
+impl Layout {
+    /// Create default layout (Streamlit-like)
+    /// - 40px top padding
+    /// - 20px left/right margins
+    /// - 12px gap between components
+    pub fn default() -> Self {
+        Layout {
+            top_padding: 40.0,
+            horizontal_margin: 20.0,
+            gap: 12.0,
+        }
+    }
+
+    /// Compact layout (less spacing)
+    pub fn compact() -> Self {
+        Layout {
+            top_padding: 20.0,
+            horizontal_margin: 10.0,
+            gap: 8.0,
+        }
+    }
+
+    /// Spacious layout (more spacing)
+    pub fn spacious() -> Self {
+        Layout {
+            top_padding: 60.0,
+            horizontal_margin: 40.0,
+            gap: 20.0,
+        }
+    }
+}
+
 /// A simple macOS application builder with fluent API
 pub struct SimpleApp {
     name: String,
@@ -84,6 +143,7 @@ pub struct SimpleApp {
     height: f64,
     centered: bool,
     components: Vec<Comp>,
+    layout: Layout,
 }
 
 impl SimpleApp {
@@ -97,7 +157,14 @@ impl SimpleApp {
             height: 600.0,
             centered: true,
             components: vec![],
+            layout: Layout::default(),
         }
+    }
+
+    /// Set custom layout configuration
+    pub fn layout(mut self, layout: Layout) -> Self {
+        self.layout = layout;
+        self
     }
 
     /// Set the window title
@@ -225,70 +292,126 @@ impl SimpleApp {
                 if !self.components.is_empty() {
                     println!("Adding {} component(s)...", self.components.len());
                     
-                    let mut y_position = 320.0;
+                    // Streamlit-like layout: single column, full width (minus margins)
+                    let available_width = self.width - (self.layout.horizontal_margin * 2.0);
+                    
+                    // Calculate available height (with bottom padding)
+                    let bottom_padding = 20.0;
+                    let available_height = self.height - self.layout.top_padding - bottom_padding;
+                    
+                    // Start from top with padding
+                    // Note: content_view coordinate system has Y=0 at BOTTOM of content view
+                    // So to position at top, we use: content_view_height - top_padding
+                    // The content view height is window height (title bar is separate)
+                    let mut y_position = self.height - self.layout.top_padding;
+                    let mut components_added = 0;
                     
                     for comp in &self.components {
+                        // Check if component would overflow vertically
+                        let next_y = y_position - comp.height - self.layout.gap;
+                        if next_y < bottom_padding {
+                            println!("  ⚠️  Component \"{}\" would overflow - skipping", comp.text);
+                            continue;
+                        }
+                        
+                        let class_name = match comp.kind {
+                            Kind::Button | Kind::Checkbox | Kind::Radio => "NSButton",
+                            Kind::Label | Kind::TextField => "NSTextField",
+                            Kind::Slider => "NSSlider",
+                            Kind::Dropdown => "NSPopUpButton",
+                            Kind::TextArea => "NSTextView",
+                        };
+                        
+                        let view_class = Class::get(class_name)
+                            .ok_or(format!("{} class not found", class_name))?;
+                        let view: *mut Object = msg_send![view_class, alloc];
+                        
+                        // Streamlit approach: components fill available width (with boundary check)
+                        let comp_width = if comp.width > available_width {
+                            available_width
+                        } else {
+                            comp.width
+                        };
+                        
+                        // Ensure component doesn't exceed window boundaries
+                        let comp_x = self.layout.horizontal_margin;
+                        let comp_y = y_position - comp.height;
+                        
+                        // Clamp height if needed
+                        let comp_height = if comp_y < bottom_padding {
+                            y_position - bottom_padding
+                        } else {
+                            comp.height
+                        };
+                        
+                        let frame = NSRect {
+                            origin: NSPoint { x: comp_x, y: comp_y },
+                            size: NSSize { width: comp_width, height: comp_height },
+                        };
+                        let view: *mut Object = msg_send![view, initWithFrame:frame];
+                        
+                        // Configure based on kind
                         match comp.kind {
                             Kind::Button => {
-                                let button_class = Class::get("NSButton")
-                                    .ok_or("NSButton class not found")?;
-                                let button: *mut Object = msg_send![button_class, alloc];
-                                
-                                let button_frame = NSRect {
-                                    origin: NSPoint { x: 20.0, y: y_position },
-                                    size: NSSize { width: comp.width, height: comp.height },
-                                };
-                                let button: *mut Object = msg_send![button, initWithFrame:button_frame];
-                                let button_title = std::ffi::CString::new(comp.text.as_str()).unwrap();
-                                let button_ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:button_title.as_ptr()];
-                                let _: () = msg_send![button, setTitle:button_ns_string];
-                                let _: () = msg_send![button, setButtonType:0];
-                                
-                                let _: () = msg_send![content_view, addSubview:button];
-                                println!("  ✓ Button added: \"{}\"", comp.text);
-                                y_position -= (comp.height + 10.0);
+                                let title = std::ffi::CString::new(comp.text.as_str()).unwrap();
+                                let ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:title.as_ptr()];
+                                let _: () = msg_send![view, setTitle:ns_string];
+                                let _: () = msg_send![view, setButtonType:0];
+                                let _: () = msg_send![view, setBezelStyle:4]; // Rounded button
+                                let _: () = msg_send![view, setEnabled:true];
+                            }
+                            Kind::Checkbox => {
+                                let title = std::ffi::CString::new(comp.text.as_str()).unwrap();
+                                let ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:title.as_ptr()];
+                                let _: () = msg_send![view, setTitle:ns_string];
+                                let _: () = msg_send![view, setButtonType:3];
+                            }
+                            Kind::Radio => {
+                                let title = std::ffi::CString::new(comp.text.as_str()).unwrap();
+                                let ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:title.as_ptr()];
+                                let _: () = msg_send![view, setTitle:ns_string];
+                                let _: () = msg_send![view, setButtonType:4];
                             }
                             Kind::Label => {
-                                let label_class = Class::get("NSTextField")
-                                    .ok_or("NSTextField class not found")?;
-                                let label: *mut Object = msg_send![label_class, alloc];
-                                
-                                let label_frame = NSRect {
-                                    origin: NSPoint { x: 20.0, y: y_position },
-                                    size: NSSize { width: comp.width, height: comp.height },
-                                };
-                                let label: *mut Object = msg_send![label, initWithFrame:label_frame];
-                                let label_text = std::ffi::CString::new(comp.text.as_str()).unwrap();
-                                let label_ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:label_text.as_ptr()];
-                                let _: () = msg_send![label, setStringValue:label_ns_string];
-                                let _: () = msg_send![label, setEditable:false];
-                                let _: () = msg_send![label, setBezeled:false];
-                                let _: () = msg_send![label, setDrawsBackground:false];
-                                
-                                let _: () = msg_send![content_view, addSubview:label];
-                                println!("  ✓ Label added: \"{}\"", comp.text);
-                                y_position -= (comp.height + 10.0);
+                                let text = std::ffi::CString::new(comp.text.as_str()).unwrap();
+                                let ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:text.as_ptr()];
+                                let _: () = msg_send![view, setStringValue:ns_string];
+                                let _: () = msg_send![view, setEditable:false];
+                                let _: () = msg_send![view, setBezeled:false];
+                                let _: () = msg_send![view, setDrawsBackground:false];
                             }
                             Kind::TextField => {
-                                let textfield_class = Class::get("NSTextField")
-                                    .ok_or("NSTextField class not found")?;
-                                let textfield: *mut Object = msg_send![textfield_class, alloc];
-                                
-                                let textfield_frame = NSRect {
-                                    origin: NSPoint { x: 20.0, y: y_position },
-                                    size: NSSize { width: comp.width, height: comp.height },
-                                };
-                                let textfield: *mut Object = msg_send![textfield, initWithFrame:textfield_frame];
-                                let textfield_text = std::ffi::CString::new(comp.text.as_str()).unwrap();
-                                let textfield_ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:textfield_text.as_ptr()];
-                                let _: () = msg_send![textfield, setStringValue:textfield_ns_string];
-                                
-                                let _: () = msg_send![content_view, addSubview:textfield];
-                                println!("  ✓ TextField added: \"{}\"", comp.text);
-                                y_position -= (comp.height + 10.0);
+                                let text = std::ffi::CString::new(comp.text.as_str()).unwrap();
+                                let ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:text.as_ptr()];
+                                let _: () = msg_send![view, setStringValue:ns_string];
+                                let _: () = msg_send![view, setBezeled:true];
+                                let _: () = msg_send![view, setDrawsBackground:true];
+                                let _: () = msg_send![view, setEditable:true];
+                            }
+                            Kind::Slider => {
+                                let _: () = msg_send![view, setMinValue:0.0];
+                                let _: () = msg_send![view, setMaxValue:100.0];
+                                let _: () = msg_send![view, setDoubleValue:50.0];
+                            }
+                            Kind::Dropdown => {
+                                let text = std::ffi::CString::new(comp.text.as_str()).unwrap();
+                                let ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:text.as_ptr()];
+                                let _: () = msg_send![view, addItemWithTitle:ns_string];
+                            }
+                            Kind::TextArea => {
+                                let text = std::ffi::CString::new(comp.text.as_str()).unwrap();
+                                let ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:text.as_ptr()];
+                                let _: () = msg_send![view, setString:ns_string];
                             }
                         }
+                        
+                        let _: () = msg_send![content_view, addSubview:view];
+                        println!("  ✓ {:?} added: \"{}\" ({}x{})", comp.kind, comp.text, comp_width as i32, comp_height as i32);
+                        components_added += 1;
+                        y_position -= (comp_height + self.layout.gap);
                     }
+                    println!("  ℹ️  {} of {} components displayed (window height: {}px)", 
+                        components_added, self.components.len(), self.height as i32);
                     println!();
                 } else {
                     println!("No components configured\n");

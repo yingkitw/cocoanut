@@ -6,6 +6,7 @@
 //! The window will stay open until you press Cmd+Q to quit.
 
 use cocoanut::prelude::*;
+use cocoanut::simple_app::Layout;
 
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     println!("🥥 Comprehensive Cocoanut Application Example\n");
@@ -123,21 +124,24 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
     let _ = (feel, dark, touchbar, continuity);
 
     println!("📊 Component Summary:");
-    println!("  • Basic Controls: 8 (3 Buttons, 2 Labels, 2 TextFields, 1 Button)");
+    println!("  • Basic Controls: 8 (4 Buttons, 2 Labels, 2 TextFields)");
+    println!("  • Advanced Controls: 8 (2 Checkboxes, 2 Radio Buttons, 2 Sliders, 2 Dropdowns)");
+    println!("  • Text Area: 1 (Multi-line TextArea)");
     println!("  • Advanced Views: 4 (TableView, CollectionView, SplitView, TabView)");
     println!("  • Web Component: 1 (WebView)");
     println!("  • Systems: 4 (Events, Layout, Animation, DataBinding)");
     println!("  • macOS Features: 5 (NativeFeel, Accessibility, DarkMode, TouchBar, Continuity)");
-    println!("  • Total: 22 components/systems\n");
+    println!("  • Total: 32 components/systems\n");
 
     println!("🚀 Launching GUI window with all components...\n");
     println!("Press Cmd+Q to quit\n");
 
-    // Create a window using SimpleApp with detailed components
+    // Create a window using SimpleApp with detailed components (using default layout)
     app("Comprehensive Demo")
-        .title("🥥 Cocoanut - Comprehensive Component Demo (22 Components)")
-        .size(1000.0, 800.0)
+        .title("🥥 Cocoanut - Comprehensive Component Demo (32 Components)")
+        .size(1000.0, 1000.0)
         .centered(true)
+        .layout(Layout::default())
         // Basic Controls - Detailed
         .add(Comp::new(Kind::Button).text("Save Document").size(150.0, 40.0))
         .add(Comp::new(Kind::Label).text("Application Status: Ready").size(400.0, 25.0))
@@ -149,6 +153,17 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         // More Buttons
         .add(Comp::new(Kind::Button).text("Settings").size(120.0, 35.0))
         .add(Comp::new(Kind::Button).text("Help").size(100.0, 35.0))
+        // Advanced Controls - Checkbox, Radio, Slider
+        .add(Comp::new(Kind::Checkbox).text("Enable notifications").size(200.0, 25.0))
+        .add(Comp::new(Kind::Checkbox).text("Auto-save enabled").size(200.0, 25.0))
+        .add(Comp::new(Kind::Radio).text("Light Mode").size(150.0, 25.0))
+        .add(Comp::new(Kind::Radio).text("Dark Mode").size(150.0, 25.0))
+        .add(Comp::new(Kind::Slider).text("Volume").size(250.0, 25.0))
+        .add(Comp::new(Kind::Slider).text("Brightness").size(250.0, 25.0))
+        // New Components - Dropdown and TextArea
+        .add(Comp::new(Kind::Dropdown).text("Select theme").size(200.0, 30.0))
+        .add(Comp::new(Kind::Dropdown).text("Choose language").size(200.0, 30.0))
+        .add(Comp::new(Kind::TextArea).text("Enter your feedback here...").size(400.0, 100.0))
         .run()?;
 
     println!("\n✅ Application closed");
