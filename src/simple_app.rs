@@ -394,14 +394,45 @@ impl SimpleApp {
                                 let _: () = msg_send![view, setDoubleValue:50.0];
                             }
                             Kind::Dropdown => {
+                                // Add placeholder item
                                 let text = std::ffi::CString::new(comp.text.as_str()).unwrap();
                                 let ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:text.as_ptr()];
                                 let _: () = msg_send![view, addItemWithTitle:ns_string];
+                                
+                                // Add sample choices based on dropdown title
+                                let choices: Vec<&str> = if comp.text.contains("theme") {
+                                    vec!["Light", "Dark", "Auto"]
+                                } else if comp.text.contains("language") {
+                                    vec!["English", "Spanish", "French", "German"]
+                                } else if comp.text.contains("size") || comp.text.contains("Font") {
+                                    vec!["Small", "Medium", "Large", "Extra Large"]
+                                } else {
+                                    vec!["Option 1", "Option 2", "Option 3"]
+                                };
+                                
+                                for choice in choices {
+                                    let choice_cstr = std::ffi::CString::new(choice).unwrap();
+                                    let choice_ns: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:choice_cstr.as_ptr()];
+                                    let _: () = msg_send![view, addItemWithTitle:choice_ns];
+                                }
                             }
                             Kind::TextArea => {
+                                // Configure TextArea for multi-line editing
+                                let _: () = msg_send![view, setEditable:true];
+                                let _: () = msg_send![view, setSelectable:true];
+                                
+                                // Set text with newlines preserved
                                 let text = std::ffi::CString::new(comp.text.as_str()).unwrap();
                                 let ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:text.as_ptr()];
                                 let _: () = msg_send![view, setString:ns_string];
+                                
+                                // Enable word wrapping
+                                let _: () = msg_send![view, setHorizontallyResizable:false];
+                                let _: () = msg_send![view, setVerticallyResizable:true];
+                                
+                                // Set background color to white
+                                let white_color: *mut Object = msg_send![objc::class!(NSColor), whiteColor];
+                                let _: () = msg_send![view, setBackgroundColor:white_color];
                             }
                         }
                         
@@ -425,8 +456,15 @@ impl SimpleApp {
                 let _: () = msg_send![app, activateIgnoringOtherApps:true];
                 println!("✓ Application activated\n");
 
-                // Step 6: Run event loop
-                println!("🚀 Running event loop (press Cmd+Q to quit)...\n");
+                // Step 6: Configure window to stop app when closed
+                let _: () = msg_send![window.ns_window(), setReleasedWhenClosed:true];
+                
+                // Make close button terminate the app
+                let ns_window = window.ns_window();
+                let _: () = msg_send![app, setDelegate:ns_window];
+
+                // Step 7: Run event loop
+                println!("🚀 Running event loop (close window or press Cmd+Q to quit)...\n");
                 let _: () = msg_send![app, run];
             }
 

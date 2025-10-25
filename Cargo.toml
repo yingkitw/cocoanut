@@ -120,6 +120,10 @@ path = "examples/comprehensive_app.rs"
 name = "minimal_app"
 path = "examples/minimal_app.rs"
 
+[[example]]
+name = "interactive_controls"
+path = "examples/interactive_controls.rs"
+
 [profile.release]
 opt-level = 3
 lto = true
