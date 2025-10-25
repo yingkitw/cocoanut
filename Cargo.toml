@@ -1,6 +1,6 @@
 [package]
 name = "cocoanut"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = ["Ying Kit WONG"]
 description = "A Rust wrapper for Cocoa to develop macOS-specific GUI applications"
@@ -124,9 +124,21 @@ path = "examples/minimal_app.rs"
 name = "interactive_controls"
 path = "examples/interactive_controls.rs"
 
+[profile.dev]
+# Fast compilation for development
+opt-level = 0
+incremental = true
+split-debuginfo = "packed"
+
 [profile.release]
+# Optimized for production
 opt-level = 3
 lto = true
 codegen-units = 1
 panic = "abort"
 strip = true
+
+[profile.bench]
+# Optimized for benchmarking
+inherits = "release"
+debug = true

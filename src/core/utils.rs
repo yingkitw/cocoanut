@@ -2,7 +2,7 @@
 
 use crate::core::error::{CocoanutError, Result};
 use objc::runtime::Object;
-use objc::{msg_send, sel, sel_impl, class};
+use objc::{sel, sel_impl};
 use std::ffi::CString;
 
 /// Convert a Rust string to a C string for Objective-C calls
@@ -15,7 +15,9 @@ use std::ffi::CString;
 /// 
 /// Returns a `Result<CString>` containing the C string
 pub fn string_to_cstring(s: &str) -> Result<CString> {
-    CString::new(s).map_err(|e| CocoanutError::InvalidParameter(e.to_string()))
+    CString::new(s).map_err(|e| CocoanutError::InvalidParameter(
+        format!("Failed to convert Rust string to C string: {} (string contains null bytes)", e)
+    ))
 }
 
 /// Convert a C string to a Rust string
@@ -29,13 +31,17 @@ pub fn string_to_cstring(s: &str) -> Result<CString> {
 /// Returns a `Result<String>` containing the Rust string
 pub unsafe fn cstring_to_string(c_str: *const i8) -> Result<String> {
     if c_str.is_null() {
-        return Err(CocoanutError::InvalidParameter("Null C string".to_string()));
+        return Err(CocoanutError::InvalidParameter(
+            "Cannot convert null C string pointer to Rust string".to_string()
+        ));
     }
     
     let c_str = unsafe { std::ffi::CStr::from_ptr(c_str) };
     c_str.to_str()
         .map(|s| s.to_string())
-        .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))
+        .map_err(|e| CocoanutError::InvalidParameter(
+            format!("Failed to convert C string to valid UTF-8: {}", e)
+        ))
 }
 
 /// Check if an Objective-C object is null
@@ -89,7 +95,9 @@ pub unsafe fn retain_object(obj: *mut Object) -> *mut Object {
 /// Returns a `Result<String>` containing the class name
 pub unsafe fn get_class_name(obj: *mut Object) -> Result<String> {
     if obj.is_null() {
-        return Err(CocoanutError::InvalidParameter("Null object".to_string()));
+        return Err(CocoanutError::InvalidParameter(
+            "Cannot get class name from null Objective-C object pointer".to_string()
+        ));
     }
     
     let class: *mut Object = objc::msg_send![obj, class];
@@ -149,7 +157,9 @@ pub fn string_to_ns_string(s: &str) -> Result<*mut Object> {
         ];
         
         if ns_string.is_null() {
-            return Err(CocoanutError::SystemError("Failed to create NSString".to_string()));
+            return Err(CocoanutError::SystemError(
+                format!("Failed to create NSString from Rust string: '{}'", s)
+            ));
         }
         
         Ok(ns_string)
@@ -167,7 +177,9 @@ pub fn string_to_ns_string(s: &str) -> Result<*mut Object> {
 /// Returns a `Result<String>` containing the Rust string
 pub unsafe fn ns_string_to_string(ns_string: *mut Object) -> Result<String> {
     if ns_string.is_null() {
-        return Err(CocoanutError::InvalidParameter("Null NSString".to_string()));
+        return Err(CocoanutError::InvalidParameter(
+            "Cannot convert null NSString pointer to Rust string".to_string()
+        ));
     }
     
     let c_str: *const i8 = objc::msg_send![ns_string, UTF8String];

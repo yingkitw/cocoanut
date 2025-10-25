@@ -368,7 +368,7 @@ mod tests {
 
     #[test]
     fn test_simple_app_builder() {
-        let app = app("Builder App");
+        let app = crate::simple_app::app("Builder App");
         assert_eq!(app.name, "Builder App");
     }
 }
