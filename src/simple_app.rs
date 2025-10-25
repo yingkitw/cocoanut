@@ -19,6 +19,62 @@ pub enum ComponentType {
     TextField,
 }
 
+/// Configurable component with customizable properties
+#[derive(Debug, Clone)]
+pub struct ComponentConfig {
+    /// Component type
+    pub component_type: ComponentType,
+    /// Component title/text
+    pub text: String,
+    /// Component width
+    pub width: f64,
+    /// Component height
+    pub height: f64,
+}
+
+impl ComponentConfig {
+    /// Create a new component configuration
+    pub fn new(component_type: ComponentType) -> Self {
+        let (text, width, height) = match component_type {
+            ComponentType::Button => ("Click Me!".to_string(), 100.0, 40.0),
+            ComponentType::Label => ("Label".to_string(), 300.0, 30.0),
+            ComponentType::TextField => ("Enter text".to_string(), 300.0, 30.0),
+        };
+        
+        ComponentConfig {
+            component_type,
+            text,
+            width,
+            height,
+        }
+    }
+
+    /// Set the component text/title
+    pub fn text(mut self, text: &str) -> Self {
+        self.text = text.to_string();
+        self
+    }
+
+    /// Set the component width
+    pub fn width(mut self, width: f64) -> Self {
+        self.width = width;
+        self
+    }
+
+    /// Set the component height
+    pub fn height(mut self, height: f64) -> Self {
+        self.height = height;
+        self
+    }
+
+    /// Set the component size
+    pub fn size(mut self, width: f64, height: f64) -> Self {
+        self.width = width;
+        self.height = height;
+        self
+    }
+}
+
 /// A simple macOS application builder with fluent API
 pub struct SimpleApp {
     name: String,
@@ -27,7 +83,7 @@ pub struct SimpleApp {
     width: f64,
     height: f64,
     centered: bool,
-    components: Vec<ComponentType>,
+    components: Vec<ComponentConfig>,
 }
 
 impl SimpleApp {
@@ -69,15 +125,15 @@ impl SimpleApp {
         self
     }
 
-    /// Add a component to the window
-    pub fn with_component(mut self, component: ComponentType) -> Self {
-        self.components.push(component);
+    /// Add a configured component to the window
+    pub fn add(mut self, config: ComponentConfig) -> Self {
+        self.components.push(config);
         self
     }
 
-    /// Add multiple components to the window
-    pub fn with_components(mut self, components: Vec<ComponentType>) -> Self {
-        self.components.extend(components);
+    /// Add multiple configured components to the window
+    pub fn add_all(mut self, configs: Vec<ComponentConfig>) -> Self {
+        self.components.extend(configs);
         self
     }
 
@@ -171,8 +227,8 @@ impl SimpleApp {
                     
                     let mut y_position = 320.0;
                     
-                    for component in &self.components {
-                        match component {
+                    for config in &self.components {
+                        match config.component_type {
                             ComponentType::Button => {
                                 let button_class = Class::get("NSButton")
                                     .ok_or("NSButton class not found")?;
@@ -180,17 +236,17 @@ impl SimpleApp {
                                 
                                 let button_frame = NSRect {
                                     origin: NSPoint { x: 20.0, y: y_position },
-                                    size: NSSize { width: 100.0, height: 40.0 },
+                                    size: NSSize { width: config.width, height: config.height },
                                 };
                                 let button: *mut Object = msg_send![button, initWithFrame:button_frame];
-                                let button_title = std::ffi::CString::new("Click Me!").unwrap();
+                                let button_title = std::ffi::CString::new(config.text.as_str()).unwrap();
                                 let button_ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:button_title.as_ptr()];
                                 let _: () = msg_send![button, setTitle:button_ns_string];
                                 let _: () = msg_send![button, setButtonType:0];
                                 
                                 let _: () = msg_send![content_view, addSubview:button];
-                                println!("  ✓ Button added");
-                                y_position -= 50.0;
+                                println!("  ✓ Button added: \"{}\"", config.text);
+                                y_position -= (config.height + 10.0);
                             }
                             ComponentType::Label => {
                                 let label_class = Class::get("NSTextField")
@@ -199,10 +255,10 @@ impl SimpleApp {
                                 
                                 let label_frame = NSRect {
                                     origin: NSPoint { x: 20.0, y: y_position },
-                                    size: NSSize { width: 300.0, height: 30.0 },
+                                    size: NSSize { width: config.width, height: config.height },
                                 };
                                 let label: *mut Object = msg_send![label, initWithFrame:label_frame];
-                                let label_text = std::ffi::CString::new("Welcome to Cocoanut!").unwrap();
+                                let label_text = std::ffi::CString::new(config.text.as_str()).unwrap();
                                 let label_ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:label_text.as_ptr()];
                                 let _: () = msg_send![label, setStringValue:label_ns_string];
                                 let _: () = msg_send![label, setEditable:false];
@@ -210,8 +266,8 @@ impl SimpleApp {
                                 let _: () = msg_send![label, setDrawsBackground:false];
                                 
                                 let _: () = msg_send![content_view, addSubview:label];
-                                println!("  ✓ Label added");
-                                y_position -= 40.0;
+                                println!("  ✓ Label added: \"{}\"", config.text);
+                                y_position -= (config.height + 10.0);
                             }
                             ComponentType::TextField => {
                                 let textfield_class = Class::get("NSTextField")
@@ -220,16 +276,16 @@ impl SimpleApp {
                                 
                                 let textfield_frame = NSRect {
                                     origin: NSPoint { x: 20.0, y: y_position },
-                                    size: NSSize { width: 300.0, height: 30.0 },
+                                    size: NSSize { width: config.width, height: config.height },
                                 };
                                 let textfield: *mut Object = msg_send![textfield, initWithFrame:textfield_frame];
-                                let textfield_text = std::ffi::CString::new("Enter text here").unwrap();
+                                let textfield_text = std::ffi::CString::new(config.text.as_str()).unwrap();
                                 let textfield_ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:textfield_text.as_ptr()];
                                 let _: () = msg_send![textfield, setStringValue:textfield_ns_string];
                                 
                                 let _: () = msg_send![content_view, addSubview:textfield];
-                                println!("  ✓ TextField added");
-                                y_position -= 40.0;
+                                println!("  ✓ TextField added: \"{}\"", config.text);
+                                y_position -= (config.height + 10.0);
                             }
                         }
                     }

@@ -138,9 +138,9 @@ fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         .title("🥥 Cocoanut - Comprehensive Component Demo (17 Components)")
         .size(1000.0, 800.0)
         .centered(true)
-        .with_component(ComponentType::Button)
-        .with_component(ComponentType::Label)
-        .with_component(ComponentType::TextField)
+        .add(ComponentConfig::new(ComponentType::Button))
+        .add(ComponentConfig::new(ComponentType::Label))
+        .add(ComponentConfig::new(ComponentType::TextField))
         .run()?;
 
     println!("\n✅ Application closed");
