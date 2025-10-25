@@ -9,6 +9,9 @@ repository = "https://github.com/yingkitw/cocoanut"
 keywords = ["cocoa", "macos", "gui", "native", "appkit"]
 categories = ["gui", "os::macos-apis"]
 
+# Ensure macOS frameworks are linked via build script
+build = "build.rs"
+
 [features]
 default = []
 test-mock = []
@@ -94,8 +97,32 @@ name = "menu_app"
 path = "examples/menu_app.rs"
 
 [[example]]
-name = "modern_features"
-path = "examples/modern_features.rs"
+name = "modern_features_simple"
+path = "examples/modern_features_simple.rs"
+
+[[example]]
+name = "window_builder_example"
+path = "examples/window_builder_example.rs"
+
+[[example]]
+name = "comprehensive_components"
+path = "examples/comprehensive_components.rs"
+
+[[example]]
+name = "event_binding_example"
+path = "examples/event_binding_example.rs"
+
+[[example]]
+name = "comprehensive_app"
+path = "examples/comprehensive_app.rs"
+
+[[example]]
+name = "comprehensive_app_simple"
+path = "examples/comprehensive_app_simple.rs"
+
+[[example]]
+name = "minimal_app"
+path = "examples/minimal_app.rs"
 
 [profile.release]
 opt-level = 3

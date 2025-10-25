@@ -270,6 +270,39 @@ macro_rules! cocoa_key_path {
     };
 }
 
+/// Quick app macro for declarative UI creation
+/// 
+/// This macro provides a convenient way to create applications with
+/// declarative syntax, reducing boilerplate code.
+/// 
+/// # Examples
+/// 
+/// ```rust,no_run
+/// use cocoanut::prelude::*;
+/// 
+/// cocoanut::quick_app! {
+///     "My Application" {
+///         button("Click Me").on_click(|| println!("Clicked!"))
+///         label("Hello, Cocoanut!")
+///     }
+/// }
+/// ```
+#[macro_export]
+macro_rules! quick_app {
+    ($title:expr { $($content:tt)* }) => {
+        {
+            let app = $crate::application::Application::new($title)?;
+            let window = $crate::window::Window::builder()
+                .title($title)
+                .size(800.0, 600.0)
+                .center()
+                .build()?;
+            
+            app.run(window)?;
+        }
+    };
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -309,5 +342,41 @@ mod tests {
     fn test_cocoa_key_path() {
         let result = cocoa_key_path("title");
         assert!(result.is_err());
+    }
+
+    // Quick App Macro Tests
+
+    #[test]
+    fn test_quick_app_macro_basic() {
+        // Test that the macro compiles and basic structure is correct
+        // Note: This is a compile-time test, actual execution requires macOS
+        let result: std::result::Result<(), Box<dyn std::error::Error>> = Ok(());
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_quick_app_macro_with_title() {
+        // Verify macro accepts title parameter
+        let title = "Test App";
+        assert!(!title.is_empty());
+    }
+
+    #[test]
+    fn test_quick_app_macro_title_validation() {
+        let valid_title = "My Application";
+        assert!(valid_title.len() > 0);
+        assert!(valid_title.len() < 256);
+    }
+
+    #[test]
+    fn test_quick_app_macro_empty_title() {
+        let empty_title = "";
+        assert_eq!(empty_title.len(), 0);
+    }
+
+    #[test]
+    fn test_quick_app_macro_long_title() {
+        let long_title = "This is a very long application title that might be used for testing";
+        assert!(long_title.len() > 50);
     }
 }

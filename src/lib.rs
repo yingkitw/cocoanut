@@ -47,6 +47,14 @@ pub mod macos_integration;
 pub mod builder;
 pub mod layout;
 pub mod styling;
+pub mod checkbox;
+pub mod radio;
+pub mod slider;
+pub mod advanced_controls;
+pub mod containers;
+pub mod data_display;
+pub mod phase3_features;
+pub mod simple_app;
 
 /// Re-exports for convenient usage
 pub mod prelude {
@@ -71,7 +79,7 @@ pub mod prelude {
     };
     
     // Builders for simplified API
-    pub use crate::builder::{ButtonBuilder, LabelBuilder, TextFieldBuilder};
+    pub use crate::builder::{ButtonBuilder, LabelBuilder, TextFieldBuilder, WindowBuilder};
     
     // Layout system
     pub use crate::layout::{VStack, HStack, Spacer, Spacing, Alignment};
@@ -80,6 +88,44 @@ pub mod prelude {
     pub use crate::styling::{
         CarbonColor, TypographyScale, SpacingScale, CornerRadiusScale, ComponentStyle,
     };
+    
+    // Phase 2: Basic Controls
+    pub use crate::checkbox::{Checkbox, CheckboxBuilder};
+    pub use crate::radio::{RadioButton, RadioButtonBuilder};
+    pub use crate::slider::{Slider, SliderBuilder};
+    pub use crate::advanced_controls::{
+        SegmentedControl, SegmentedControlBuilder,
+        Stepper, StepperBuilder,
+        Switch, SwitchBuilder,
+    };
+    
+    // Phase 2: Container Views
+    pub use crate::containers::{
+        ScrollView, ScrollViewBuilder,
+        TabView, TabViewBuilder,
+        SplitView, SplitViewBuilder, SplitOrientation,
+        GroupBox, GroupBoxBuilder,
+    };
+    
+    // Phase 3: Data Display
+    pub use crate::data_display::{
+        TableView, TableViewBuilder,
+        OutlineView, OutlineViewBuilder, OutlineItem,
+        CollectionView, CollectionViewBuilder,
+    };
+    
+    // Phase 3: macOS Features
+    pub use crate::phase3_features::{
+        GridView, GridViewBuilder,
+        TouchBar as TouchBarFeature, TouchBarBuilder as TouchBarFeatureBuilder, TouchBarItem as TouchBarFeatureItem,
+        AccessibilityOptions, AccessibilityBuilder,
+        DarkModeManager as DarkModeFeature, Appearance as AppearanceMode,
+        DragDropManager,
+        AdvancedStyling, AdvancedStylingBuilder,
+    };
+    
+    // Simple high-level API
+    pub use crate::simple_app::{SimpleApp, app};
 }
 
 pub use error::{CocoanutError, Result};

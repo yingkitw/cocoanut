@@ -65,13 +65,20 @@ impl Button {
         
         #[cfg(not(feature = "test-mock"))]
         unsafe {
+            use cocoa::foundation::{NSRect, NSPoint, NSSize};
+            
             let button_class = objc::class!(NSButton);
             let ns_button: *mut Object = msg_send![button_class, alloc];
             
             let title_cstr = CString::new(title)
                 .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
             
-            let frame: *mut Object = objc::msg_send![objc::class!(NSRect), new];
+            // Create NSRect as a C struct (not an Objective-C class)
+            let frame = NSRect {
+                origin: NSPoint { x: 0.0, y: 0.0 },
+                size: NSSize { width: 100.0, height: 40.0 },
+            };
+            
             let ns_button: *mut Object = msg_send![
                 ns_button,
                 initWithFrame: frame
@@ -155,13 +162,20 @@ impl Label {
         
         #[cfg(not(feature = "test-mock"))]
         unsafe {
+            use cocoa::foundation::{NSRect, NSPoint, NSSize};
+            
             let label_class = objc::class!(NSTextField);
             let ns_label: *mut Object = msg_send![label_class, alloc];
             
             let text_cstr = CString::new(text)
                 .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
             
-            let frame: *mut Object = objc::msg_send![objc::class!(NSRect), new];
+            // Create NSRect as a C struct (not an Objective-C class)
+            let frame = NSRect {
+                origin: NSPoint { x: 0.0, y: 0.0 },
+                size: NSSize { width: 200.0, height: 30.0 },
+            };
+            
             let ns_label: *mut Object = msg_send![
                 ns_label,
                 initWithFrame: frame
@@ -246,13 +260,20 @@ impl TextField {
         
         #[cfg(not(feature = "test-mock"))]
         unsafe {
+            use cocoa::foundation::{NSRect, NSPoint, NSSize};
+            
             let text_field_class = objc::class!(NSTextField);
             let ns_text_field: *mut Object = msg_send![text_field_class, alloc];
             
             let text_cstr = CString::new(text)
                 .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
             
-            let frame: *mut Object = objc::msg_send![objc::class!(NSRect), new];
+            // Create NSRect as a C struct (not an Objective-C class)
+            let frame = NSRect {
+                origin: NSPoint { x: 0.0, y: 0.0 },
+                size: NSSize { width: 200.0, height: 30.0 },
+            };
+            
             let ns_text_field: *mut Object = msg_send![
                 ns_text_field,
                 initWithFrame: frame

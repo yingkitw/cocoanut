@@ -1,6 +1,7 @@
 //! Window management for macOS GUI applications
 
 use crate::error::{CocoanutError, Result};
+use crate::builder::WindowBuilder;
 use objc::runtime::Object;
 use objc::{msg_send, sel, sel_impl};
 use std::ffi::CString;
@@ -14,6 +15,41 @@ pub struct Window {
 }
 
 impl Window {
+    /// Create a new window builder for fluent API
+    /// 
+    /// # Example
+    /// 
+    /// ```rust,no_run
+    /// use cocoanut::prelude::*;
+    /// 
+    /// fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
+    ///     let window = Window::builder()
+    ///         .title("My App")
+    ///         .size(800.0, 600.0)
+    ///         .center()
+    ///         .build()?;
+    ///     Ok(())
+    /// }
+    /// ```
+    pub fn builder() -> WindowBuilder {
+        WindowBuilder::new()
+    }
+
+    /// Create a Window from an existing NSWindow pointer
+    /// 
+    /// # Safety
+    /// 
+    /// This is unsafe because it takes ownership of a raw NSWindow pointer.
+    /// The caller must ensure the pointer is valid.
+    pub fn from_ns_window(ns_window: *mut Object) -> Self {
+        Window {
+            ns_window,
+            title: String::new(),
+            width: 800.0,
+            height: 600.0,
+        }
+    }
+
     /// Create a new window
     /// 
     /// # Arguments
@@ -49,23 +85,17 @@ impl Window {
         
         #[cfg(not(feature = "test-mock"))]
         unsafe {
+            use cocoa::foundation::{NSRect, NSPoint, NSSize};
+            
             let window_class = objc::class!(NSWindow);
-            let rect_class = objc::class!(NSRect);
             
-            // Create NSRect for window frame
-            let rect: *mut Object = objc::msg_send![rect_class, new];
-            let point: *mut Object = objc::msg_send![objc::class!(NSPoint), new];
-            let _: () = msg_send![rect, setOrigin: point];
-            let size: *mut Object = objc::msg_send![objc::class!(NSSize), new];
-            let _: () = msg_send![rect, setSize: size];
+            // Create NSRect as a C struct (not an Objective-C class)
+            let frame = NSRect {
+                origin: NSPoint { x: 100.0, y: 100.0 },
+                size: NSSize { width, height },
+            };
             
-            // Set rect values
-            let _: () = msg_send![rect, setX: 100.0];
-            let _: () = msg_send![rect, setY: 100.0];
-            let _: () = msg_send![rect, setWidth: width];
-            let _: () = msg_send![rect, setHeight: height];
-            
-            // Create window style mask
+            // Create window with proper initialization
             let style_mask = 15; // NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable
             
             // Create the window
@@ -74,7 +104,7 @@ impl Window {
                 alloc
             ];
             
-            let ns_window: *mut Object = msg_send![ns_window, initWithContentRect:rect styleMask:style_mask backing:2 defer:false];
+            let ns_window: *mut Object = msg_send![ns_window, initWithContentRect:frame styleMask:style_mask backing:2 defer:false];
             
             if ns_window.is_null() {
                 return Err(CocoanutError::WindowCreationFailed(
@@ -203,6 +233,20 @@ impl Window {
         unsafe {
             let visible: bool = msg_send![self.ns_window, isVisible];
             visible
+        }
+    }
+    
+    /// Center the window on screen
+    pub fn center(&mut self) -> Result<()> {
+        #[cfg(feature = "test-mock")]
+        {
+            return Ok(());
+        }
+        
+        #[cfg(not(feature = "test-mock"))]
+        unsafe {
+            let _: () = msg_send![self.ns_window, center];
+            Ok(())
         }
     }
     
