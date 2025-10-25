@@ -1,6 +1,6 @@
 //! Window management for macOS GUI applications
 
-use crate::error::{CocoanutError, Result};
+use crate::core::error::{CocoanutError, Result};
 use crate::builder::WindowBuilder;
 use objc::runtime::Object;
 use objc::{msg_send, sel, sel_impl};

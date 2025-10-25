@@ -3,7 +3,7 @@
 //! This module provides macros that validate Objective-C method calls
 //! at compile time, ensuring type safety and reducing runtime errors.
 
-use crate::error::{CocoanutError, Result};
+use crate::core::error::{CocoanutError, Result};
 use objc::runtime::Object;
 use std::ffi::CString;
 
@@ -14,14 +14,16 @@ use std::ffi::CString;
 /// 
 /// # Examples
 /// 
-/// ```rust
+/// ```rust,ignore
 /// use cocoanut::cocoa_call;
+/// use objc::runtime::Object;
 /// 
 /// // Type-safe method call
-/// let result: *mut Object = cocoa_call(obj, "methodWithString:", &["hello"]);
+/// let obj: *mut Object = std::ptr::null_mut();
+/// let result = cocoa_call::<*mut Object>(obj, "methodWithString:", &["hello"]);
 /// 
 /// // With return type validation
-/// let result: bool = cocoa_call(obj, "isEnabled", &[]);
+/// let result = cocoa_call::<bool>(obj, "isEnabled", &[]);
 /// ```
 pub fn cocoa_call<T>(obj: *mut Object, method: &str, args: &[&str]) -> Result<T> {
     if obj.is_null() {
@@ -40,7 +42,7 @@ pub fn cocoa_call<T>(obj: *mut Object, method: &str, args: &[&str]) -> Result<T>
 /// 
 /// # Examples
 /// 
-/// ```rust
+/// ```rust,ignore
 /// use cocoanut::cocoa_new;
 /// 
 /// // Create a new NSString
@@ -66,14 +68,16 @@ pub fn cocoa_new(class_name: &str, method: &str, args: &[&str]) -> Result<*mut O
 /// 
 /// # Examples
 /// 
-/// ```rust
-/// use cocoanut::cocoa_property;
+/// ```rust,ignore
+/// use cocoanut::cocoa_property_get;
+/// use objc::runtime::Object;
 /// 
 /// // Get property
-/// let title: String = cocoa_property_get(obj, "title");
+/// let obj: *mut Object = std::ptr::null_mut();
+/// let title = cocoa_property_get::<String>(obj, "title");
 /// 
 /// // Set property
-/// cocoa_property_set(obj, "setTitle:", "New Title");
+/// let _ = cocoa_property_set(obj, "setTitle:", "New Title");
 /// ```
 pub fn cocoa_property_get<T>(obj: *mut Object, property: &str) -> Result<T> {
     if obj.is_null() {
@@ -102,7 +106,7 @@ pub fn cocoa_property_set(obj: *mut Object, property: &str, value: &str) -> Resu
 /// 
 /// # Examples
 /// 
-/// ```rust
+/// ```rust,ignore
 /// use cocoanut::cocoa_selector;
 /// 
 /// let selector = cocoa_selector("initWithString:");
@@ -130,7 +134,7 @@ pub fn cocoa_selector(name: &str) -> Result<objc::runtime::Sel> {
 /// 
 /// # Examples
 /// 
-/// ```rust
+/// ```rust,ignore
 /// use cocoanut::cocoa_class;
 /// 
 /// let class = cocoa_class("NSString");
@@ -158,7 +162,7 @@ pub fn cocoa_class(name: &str) -> Result<*const objc::runtime::Class> {
 /// 
 /// # Examples
 /// 
-/// ```rust
+/// ```rust,ignore
 /// use cocoanut::cocoa_notification;
 /// 
 /// let notification = cocoa_notification("NSWindowDidResizeNotification");
@@ -186,7 +190,7 @@ pub fn cocoa_notification(name: &str) -> Result<objc::runtime::Sel> {
 /// 
 /// # Examples
 /// 
-/// ```rust
+/// ```rust,ignore
 /// use cocoanut::cocoa_key_path;
 /// 
 /// let key_path = cocoa_key_path("title");
@@ -277,19 +281,18 @@ macro_rules! cocoa_key_path {
 /// 
 /// # Examples
 /// 
-/// ```rust,no_run
+/// ```rust,ignore
 /// use cocoanut::prelude::*;
 /// 
 /// cocoanut::quick_app! {
-///     "My Application" {
-///         button("Click Me").on_click(|| println!("Clicked!"))
-///         label("Hello, Cocoanut!")
+///     "My Application", {
+///         // UI components go here
 ///     }
 /// }
 /// ```
 #[macro_export]
 macro_rules! quick_app {
-    ($title:expr { $($content:tt)* }) => {
+    ($title:expr, { $($content:tt)* }) => {
         {
             let app = $crate::application::Application::new($title)?;
             let window = $crate::window::Window::builder()

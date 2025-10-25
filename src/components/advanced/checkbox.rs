@@ -2,7 +2,7 @@
 //!
 //! Provides a simple on/off toggle control with builder pattern support.
 
-use crate::error::Result;
+use crate::core::error::Result;
 
 /// A checkbox control for boolean selection
 pub struct Checkbox {

@@ -32,47 +32,100 @@
 #![warn(clippy::all)]
 #![deny(unsafe_op_in_unsafe_fn)]
 
-pub mod application;
+// Organized module structure
+pub mod core;
+pub mod components;
+pub mod systems;
+pub mod features;
+pub mod utils;
+
+// High-level API
 pub mod window;
 pub mod menu;
-pub mod controls;
-pub mod events;
-pub mod drawing;
-pub mod error;
-pub mod utils;
+pub mod simple_app;
+pub mod application;
 pub mod async_ui;
 pub mod streaming;
-pub mod zero_cost;
-pub mod macos_integration;
-pub mod builder;
-pub mod layout;
-pub mod styling;
-pub mod checkbox;
-pub mod radio;
-pub mod slider;
-pub mod advanced_controls;
-pub mod containers;
-pub mod data_display;
-pub mod phase3_features;
-pub mod simple_app;
+
+// Legacy exports for backward compatibility
+pub mod controls {
+    pub use crate::components::basic::*;
+}
+pub mod controls_v2 {
+    pub use crate::components::basic::*;
+}
+pub mod checkbox {
+    pub use crate::components::advanced::checkbox::*;
+}
+pub mod radio {
+    pub use crate::components::advanced::radio::*;
+}
+pub mod slider {
+    pub use crate::components::advanced::slider::*;
+}
+pub mod advanced_controls {
+    pub use crate::components::advanced::*;
+}
+pub mod containers {
+    pub use crate::components::containers::*;
+}
+pub mod data_display {
+    pub use crate::components::data_display::*;
+}
+pub mod events {
+    pub use crate::systems::events::*;
+}
+pub mod layout {
+    pub use crate::systems::layout::*;
+}
+pub mod builder {
+    pub use crate::systems::builder::*;
+}
+pub mod essential_features {
+    pub use crate::systems::essential_features::*;
+}
+pub mod drawing {
+    pub use crate::features::drawing::*;
+}
+pub mod styling {
+    pub use crate::features::styling::*;
+}
+pub mod zero_cost {
+    pub use crate::features::zero_cost::*;
+}
+pub mod macos_features {
+    pub use crate::features::macos::*;
+}
+pub mod macos_integration {
+    pub use crate::features::macos::*;
+}
+pub mod phase3_features {
+    pub use crate::features::phase3_features::*;
+}
+pub mod advanced_views {
+    pub use crate::features::advanced_views::*;
+}
+pub mod core_fixes {
+    pub use crate::utils::*;
+}
 
 /// Re-exports for convenient usage
 pub mod prelude {
     pub use crate::application::Application;
     pub use crate::window::Window;
     pub use crate::menu::{Menu, MenuItem};
-    pub use crate::controls::{Button, Label, TextField};
-    pub use crate::events::{Event, EventHandler};
-    pub use crate::drawing::{Color, Point, Size, Rect};
-    pub use crate::error::{CocoanutError, Result};
+    pub use crate::components::basic::{Button, Label, TextField};
+    pub use crate::systems::events::{Event, EventHandler};
+    pub use crate::features::drawing::{Color, Point, Size, Rect};
+    pub use crate::core::error::{CocoanutError, Result};
     
     // Modern Rust patterns
     pub use crate::async_ui::{AsyncUI, AsyncUIExecutor, AsyncUIContext, AsyncWindow, AsyncButton};
     pub use crate::streaming::{ReactiveUI, UIEvent, UIEventStream, ReactiveButton, ReactiveTextField, ReactiveWindow, ReactiveUIManager};
-    pub use crate::zero_cost::{ZeroCostObject, ZeroCostString, ZeroCostArray, ZeroCostPoint, ZeroCostSize, ZeroCostRect, ZeroCostColor};
+    pub use crate::features::zero_cost::{ZeroCostObject, ZeroCostString, ZeroCostArray, ZeroCostPoint, ZeroCostSize, ZeroCostRect, ZeroCostColor};
     
     // macOS integration
-    pub use crate::macos_integration::{
+    pub use crate::features::macos::{
         MacOSIntegrationManager, DesignLanguageManager, AccessibilityManager, DarkModeManager, TouchBarManager,
         DesignStyle, Appearance, TouchBarItem, DesignLanguageComponent, AccessibleComponent,
         NativeWindow, NativeButton
@@ -124,8 +177,41 @@ pub mod prelude {
         AdvancedStyling, AdvancedStylingBuilder,
     };
     
+    // macOS Integration Features (new)
+    pub use crate::macos_features::{
+        NativeFeel,
+        DesignStyle as NativeDesignStyle,
+        DarkModeManager as DarkMode,
+        Appearance as SystemAppearance,
+        TouchBarManager as MacTouchBar,
+        TouchBarItem as MacTouchBarItem,
+        ContinuityManager,
+    };
+    
+    // Core fixes and improvements
+    pub use crate::utils::{
+        ThreadSafeView, MemoryManager, ErrorContext, ApiConsistency, CompilationTracker,
+    };
+    
+    // Essential features
+    pub use crate::essential_features::{
+        EventSystem, EventCallback,
+        LayoutConstraint, AutoLayout,
+        Animation, TimingFunction, CustomView,
+        DataBinding,
+    };
+    
+    // Advanced views
+    pub use crate::advanced_views::{
+        TableView as TableViewComponent, TableViewDataSource,
+        CollectionView as CollectionViewComponent, CollectionViewItem,
+        SplitView as SplitViewComponent, SplitOrientation as SplitViewOrientation,
+        TabView as TabViewComponent, TabViewItem,
+        WebView as WebViewComponent,
+    };
+    
     // Simple high-level API
     pub use crate::simple_app::{SimpleApp, app};
 }
 
-pub use error::{CocoanutError, Result};
+pub use core::error::{CocoanutError, Result};

@@ -3,7 +3,7 @@
 //! This module provides deep integration with macOS features including
 //! accessibility, dark mode, Touch Bar support, and native design language compliance.
 
-use crate::error::{CocoanutError, Result};
+use crate::core::error::{CocoanutError, Result};
 use objc::runtime::Object;
 use std::ffi::CString;
 use std::sync::Arc;

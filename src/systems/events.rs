@@ -1,6 +1,6 @@
 //! Event handling for macOS GUI applications
 
-use crate::error::{CocoanutError, Result};
+use crate::core::error::{CocoanutError, Result};
 use std::ffi::CString;
 
 /// Event types that can be handled

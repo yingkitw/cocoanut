@@ -2,7 +2,7 @@
 //!
 //! Provides mutually exclusive selection controls with builder pattern support.
 
-use crate::error::Result;
+use crate::core::error::Result;
 
 /// A radio button control for exclusive selection
 pub struct RadioButton {

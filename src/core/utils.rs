@@ -1,6 +1,6 @@
 //! Utility functions for macOS GUI applications
 
-use crate::error::{CocoanutError, Result};
+use crate::core::error::{CocoanutError, Result};
 use objc::runtime::Object;
 use objc::{msg_send, sel, sel_impl, class};
 use std::ffi::CString;

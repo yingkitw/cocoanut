@@ -170,6 +170,26 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 - ✅ **Component Positioning** - Automatic layout in windows
 - ✅ **Real macOS GUI** - No mocking, full NSApplication support
 
+## 📚 Documentation
+
+Complete documentation is available in [DOCUMENTATION.md](DOCUMENTATION.md). Key guides:
+
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System architecture and design
+- **[SRC_ORGANIZATION.md](SRC_ORGANIZATION.md)** - Source code structure
+- **[MACOS_FEATURES.md](MACOS_FEATURES.md)** - Native macOS features
+- **[SIMPLE_APP_API.md](SIMPLE_APP_API.md)** - High-level API guide
+- **[EXAMPLES_UPDATED.md](EXAMPLES_UPDATED.md)** - Available examples
+
+## 📋 Changelog
+
+### 0.2.0
+- ✅ **Trait-Based Architecture** - Drawable, Textual, Positionable traits
+- ✅ **macOS Features** - Native Feel, Accessibility, Dark Mode, Touch Bar, Continuity
+- ✅ **Priority Features** - 15 features across 3 priority levels
+- ✅ **Source Organization** - Hierarchical module structure
+- ✅ **Component Positioning** - Automatic layout in windows
+- ✅ **Real macOS GUI** - No mocking, full NSApplication support
+
 ### 0.1.0
 - Initial release
 - Basic window management

@@ -3,7 +3,7 @@
 //! This module provides reactive programming capabilities using streams
 //! and observables for UI updates and data flow.
 
-use crate::error::{CocoanutError, Result};
+use crate::core::error::{CocoanutError, Result};
 use futures::stream::{BoxStream, Stream, StreamExt};
 use futures::Future;
 use std::pin::Pin;

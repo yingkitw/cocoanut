@@ -3,7 +3,7 @@
 //! This module provides abstractions that compile to efficient code
 //! with minimal runtime overhead, following Rust's zero-cost abstraction principle.
 
-use crate::error::{CocoanutError, Result};
+use crate::core::error::{CocoanutError, Result};
 use std::marker::PhantomData;
 use std::ops::{Deref, DerefMut};
 

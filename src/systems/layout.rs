@@ -3,7 +3,7 @@
 //! Provides simple layout containers (VStack, HStack) for organizing UI components
 //! without manual positioning, inspired by SwiftUI.
 
-use crate::error::Result;
+use crate::core::error::Result;
 
 /// Represents the spacing between items in a layout
 #[derive(Debug, Clone, Copy)]

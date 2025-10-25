@@ -5,7 +5,7 @@
 
 use crate::controls::{Button, Label, TextField};
 use crate::window::Window;
-use crate::error::Result;
+use crate::core::error::Result;
 use std::sync::Arc;
 
 /// Callback type for button click events

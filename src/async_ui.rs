@@ -3,7 +3,7 @@
 //! This module provides async/await support for UI operations, allowing
 //! non-blocking updates and better user experience.
 
-use crate::error::{CocoanutError, Result};
+use crate::core::error::{CocoanutError, Result};
 use futures::future::{BoxFuture, FutureExt};
 use std::pin::Pin;
 use std::sync::Arc;

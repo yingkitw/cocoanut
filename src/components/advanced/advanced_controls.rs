@@ -2,7 +2,7 @@
 //!
 //! Includes SegmentedControl, Stepper, and Switch controls.
 
-use crate::error::Result;
+use crate::core::error::Result;
 
 // ============================================================================
 // SEGMENTED CONTROL
@@ -23,7 +23,7 @@ impl SegmentedControl {
     /// Create a new segmented control with segments
     pub fn new(segments: Vec<String>) -> Result<Self> {
         if segments.is_empty() {
-            return Err(crate::error::CocoanutError::InvalidParameter(
+            return Err(crate::core::error::CocoanutError::InvalidParameter(
                 "Segments cannot be empty".to_string()
             ));
         }
@@ -49,7 +49,7 @@ impl SegmentedControl {
             self.selected_index = index;
             Ok(())
         } else {
-            Err(crate::error::CocoanutError::InvalidParameter(
+            Err(crate::core::error::CocoanutError::InvalidParameter(
                 format!("Index {} out of bounds", index)
             ))
         }
@@ -132,7 +132,7 @@ impl Stepper {
             self.current_value += 1;
             Ok(())
         } else {
-            Err(crate::error::CocoanutError::InvalidParameter(
+            Err(crate::core::error::CocoanutError::InvalidParameter(
                 "Cannot increment beyond max value".to_string()
             ))
         }
@@ -144,7 +144,7 @@ impl Stepper {
             self.current_value -= 1;
             Ok(())
         } else {
-            Err(crate::error::CocoanutError::InvalidParameter(
+            Err(crate::core::error::CocoanutError::InvalidParameter(
                 "Cannot decrement below min value".to_string()
             ))
         }

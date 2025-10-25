@@ -2,7 +2,7 @@
 //!
 //! Includes TableView, OutlineView, and CollectionView for displaying data.
 
-use crate::error::Result;
+use crate::core::error::Result;
 
 // ============================================================================
 // TABLE VIEW
@@ -23,7 +23,7 @@ impl TableView {
     /// Create a new table view with columns
     pub fn new(columns: Vec<String>) -> Result<Self> {
         if columns.is_empty() {
-            return Err(crate::error::CocoanutError::InvalidParameter(
+            return Err(crate::core::error::CocoanutError::InvalidParameter(
                 "Columns cannot be empty".to_string()
             ));
         }
@@ -46,7 +46,7 @@ impl TableView {
     /// Add a row
     pub fn add_row(&mut self, row: Vec<String>) -> Result<()> {
         if row.len() != self.columns.len() {
-            return Err(crate::error::CocoanutError::InvalidParameter(
+            return Err(crate::core::error::CocoanutError::InvalidParameter(
                 format!("Row length {} doesn't match column count {}", row.len(), self.columns.len())
             ));
         }
@@ -218,7 +218,7 @@ impl CollectionView {
     /// Create a new collection view
     pub fn new(columns: usize) -> Result<Self> {
         if columns == 0 {
-            return Err(crate::error::CocoanutError::InvalidParameter(
+            return Err(crate::core::error::CocoanutError::InvalidParameter(
                 "Columns must be greater than 0".to_string()
             ));
         }

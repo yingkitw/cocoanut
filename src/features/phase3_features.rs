@@ -2,7 +2,7 @@
 //!
 //! Includes GridView, Touch Bar, Accessibility, Dark Mode, Drag & Drop, and Advanced Styling.
 
-use crate::error::Result;
+use crate::core::error::Result;
 
 // ============================================================================
 // GRID VIEW
@@ -24,7 +24,7 @@ impl GridView {
     /// Create a new grid view
     pub fn new(columns: usize, rows: usize) -> Result<Self> {
         if columns == 0 || rows == 0 {
-            return Err(crate::error::CocoanutError::InvalidParameter(
+            return Err(crate::core::error::CocoanutError::InvalidParameter(
                 "Grid dimensions must be greater than 0".to_string()
             ));
         }

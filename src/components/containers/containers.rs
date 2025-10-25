@@ -2,7 +2,7 @@
 //!
 //! Includes ScrollView, TabView, SplitView, and GroupBox containers.
 
-use crate::error::Result;
+use crate::core::error::Result;
 
 // ============================================================================
 // SCROLL VIEW
@@ -112,7 +112,7 @@ impl TabView {
     /// Create a new tab view
     pub fn new(tabs: Vec<String>) -> Result<Self> {
         if tabs.is_empty() {
-            return Err(crate::error::CocoanutError::InvalidParameter(
+            return Err(crate::core::error::CocoanutError::InvalidParameter(
                 "Tabs cannot be empty".to_string()
             ));
         }
@@ -138,7 +138,7 @@ impl TabView {
             self.selected_tab = index;
             Ok(())
         } else {
-            Err(crate::error::CocoanutError::InvalidParameter(
+            Err(crate::core::error::CocoanutError::InvalidParameter(
                 format!("Tab index {} out of bounds", index)
             ))
         }
@@ -233,7 +233,7 @@ impl SplitView {
             self.divider_position = position;
             Ok(())
         } else {
-            Err(crate::error::CocoanutError::InvalidParameter(
+            Err(crate::core::error::CocoanutError::InvalidParameter(
                 "Divider position must be between 0.0 and 1.0".to_string()
             ))
         }

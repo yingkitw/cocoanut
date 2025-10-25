@@ -2,7 +2,7 @@
 //!
 //! Provides numeric range selection with builder pattern support.
 
-use crate::error::Result;
+use crate::core::error::Result;
 
 /// A slider control for numeric range selection
 pub struct Slider {
@@ -47,7 +47,7 @@ impl Slider {
             self.current_value = value;
             Ok(())
         } else {
-            Err(crate::error::CocoanutError::InvalidParameter(
+            Err(crate::core::error::CocoanutError::InvalidParameter(
                 format!("Value {} out of range [{}, {}]", value, self.min_value, self.max_value)
             ))
         }

@@ -72,3 +72,9 @@ impl From<tokio::sync::oneshot::error::RecvError> for CocoanutError {
         CocoanutError::ThreadingError(format!("Failed to receive async result: {}", err))
     }
 }
+
+impl From<std::ffi::NulError> for CocoanutError {
+    fn from(err: std::ffi::NulError) -> Self {
+        CocoanutError::InvalidParameter(format!("Null byte in string: {}", err))
+    }
+}

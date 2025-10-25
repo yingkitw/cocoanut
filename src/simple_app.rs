@@ -3,7 +3,7 @@
 //! This module provides a simplified interface for building macOS GUI applications
 //! without needing to deal with low-level Objective-C details.
 
-use crate::error::Result;
+use crate::core::error::Result;
 use crate::window::Window;
 use crate::layout::{VStack, HStack};
 use crate::styling::CarbonColor;
@@ -85,7 +85,7 @@ impl SimpleApp {
                 let app: *mut Object = msg_send![app_class, sharedApplication];
                 
                 if app.is_null() {
-                    return Err(crate::error::CocoanutError::ApplicationInitFailed(
+                    return Err(crate::core::error::CocoanutError::ApplicationInitFailed(
                         "Failed to get NSApplication".to_string()
                     ));
                 }
@@ -116,7 +116,7 @@ impl SimpleApp {
 
                     // Set title
                     let title_cstr = std::ffi::CString::new(&self.title[..])
-                        .map_err(|e| crate::error::CocoanutError::InvalidParameter(e.to_string()))?;
+                        .map_err(|e| crate::core::error::CocoanutError::InvalidParameter(e.to_string()))?;
                     let ns_string_class = objc::class!(NSString);
                     let title_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String:title_cstr.as_ptr()];
                     let _: () = msg_send![ns_window, setTitle:title_nsstring];
