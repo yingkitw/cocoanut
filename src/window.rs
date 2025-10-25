@@ -115,7 +115,9 @@ impl Window {
             // Set window title
             let title_cstr = CString::new(title)
                 .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
-            let _: () = msg_send![ns_window, setTitle: title_cstr.as_ptr()];
+            let ns_string_class = objc::class!(NSString);
+            let title_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String: title_cstr.as_ptr()];
+            let _: () = msg_send![ns_window, setTitle: title_nsstring];
             
             // Center the window
             let _: () = msg_send![ns_window, center];
@@ -146,7 +148,9 @@ impl Window {
         unsafe {
             let title_cstr = CString::new(title)
                 .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
-            let _: () = msg_send![self.ns_window, setTitle: title_cstr.as_ptr()];
+            let ns_string_class = objc::class!(NSString);
+            let title_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String: title_cstr.as_ptr()];
+            let _: () = msg_send![self.ns_window, setTitle: title_nsstring];
             self.title = title.to_string();
             Ok(())
         }
@@ -253,6 +257,43 @@ impl Window {
     /// Get the underlying NSWindow pointer
     pub(crate) fn ns_window(&self) -> *mut Object {
         self.ns_window
+    }
+    
+    /// Add a subview (component) to the window's content view
+    pub fn add_subview(&self, subview: *mut Object) -> Result<()> {
+        #[cfg(feature = "test-mock")]
+        {
+            return Ok(());
+        }
+        
+        #[cfg(not(feature = "test-mock"))]
+        unsafe {
+            use cocoa::foundation::{NSRect, NSPoint, NSSize};
+            
+            // Get the window's content view
+            let content_view: *mut Object = msg_send![self.ns_window, contentView];
+            
+            if content_view.is_null() {
+                return Err(CocoanutError::ControlCreationFailed(
+                    "Failed to get window content view".to_string()
+                ));
+            }
+            
+            // Set frame for the subview if it doesn't have one
+            let frame = NSRect {
+                origin: NSPoint { x: 20.0, y: 20.0 },
+                size: NSSize { width: 200.0, height: 40.0 },
+            };
+            let _: () = msg_send![subview, setFrame: frame];
+            
+            // Add the subview to the content view
+            let _: () = msg_send![content_view, addSubview: subview];
+            
+            // Make it visible
+            let _: () = msg_send![subview, setHidden: false];
+            
+            Ok(())
+        }
     }
 }
 

@@ -64,9 +64,13 @@ graph TB
 #### `controls.rs`
 - **Purpose**: UI controls and widgets
 - **Key Components**:
-  - `Button`: Clickable button control
-  - `Label`: Text display control
-  - `TextField`: Text input control
+  - `Button`: Clickable button control with builder pattern
+  - `Label`: Text display control with styling
+  - `TextField`: Text input control with editing
+- **Features**:
+  - Builder patterns for fluent API
+  - `as_view()` method for window integration
+  - Proper NSString conversion for text
 
 #### `events.rs`
 - **Purpose**: Event handling system
@@ -92,6 +96,19 @@ graph TB
   - `Result<T>`: Result type alias
   - Error conversion implementations
 
+#### `simple_app.rs`
+- **Purpose**: High-level application API with minimal boilerplate
+- **Key Components**:
+  - `SimpleApp`: Builder for creating macOS apps
+  - Fluent API: `.title()`, `.size()`, `.centered()`, `.with_window()`, `.run()`
+  - Automatic component creation and display
+- **Features**:
+  - NSApplication initialization
+  - Window creation and configuration
+  - Component creation (Button, Label, TextField)
+  - Event loop management
+  - Automatic component positioning
+
 #### `utils.rs`
 - **Purpose**: Utility functions and helpers
 - **Key Components**:
@@ -100,6 +117,26 @@ graph TB
   - Threading utilities
   - Logging functions
 
+## GUI Component Display System
+
+### Component Lifecycle
+1. **NSApplication Initialization** - `SimpleApp::run()` creates NSApplication
+2. **Window Creation** - Window is created with specified dimensions
+3. **Component Creation** - Components (Button, Label, TextField) created after NSApplication init
+4. **Component Positioning** - Components positioned with hardcoded frames
+5. **Window Display** - Window made visible with components
+6. **Event Loop** - NSApplication runs main event loop
+
+### Key Insight: NSApplication Context
+- NSView components MUST be created within NSApplication context
+- Creating components before NSApplication initialization causes crashes
+- Solution: Move component creation to SimpleApp::run() after NSApplication.sharedApplication
+
+### Component Integration
+- `Window::add_subview()` - Adds components to window's content view
+- `Component::as_view()` - Returns NSView pointer for window integration
+- Automatic frame setting and visibility configuration
+
 ## Design Patterns
 
 ### Wrapper Pattern
@@ -107,6 +144,11 @@ Each Cocoa class is wrapped in a Rust struct that provides:
 - Memory safety through Rust's ownership system
 - Error handling for Objective-C operations
 - Idiomatic Rust API
+
+### Builder Pattern
+- `WindowBuilder`, `ButtonBuilder`, `LabelBuilder`, `TextFieldBuilder`
+- Fluent API for configuration
+- Type-safe component creation
 
 ### Trait-Based Design
 - `EventHandler` trait for event processing

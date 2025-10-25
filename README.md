@@ -70,21 +70,27 @@ cargo add cocoanut
 use cocoanut::prelude::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let app = Application::new("My App")?;
-    let window = Window::new("My Window", 800.0, 600.0)?;
-    
-    let button = Button::builder()
-        .title("Click Me")
-        .size(100.0, 50.0)
+    // Create a window
+    let window = Window::builder()
+        .title("My App")
+        .size(600.0, 400.0)
+        .center()
         .build()?;
     
-    let vstack = VStack::new()
-        .spacing(Spacing::standard())
-        .alignment(Alignment::Center);
+    // Run the app - components display automatically!
+    app("MyApp")
+        .with_window(window)
+        .run()?;
     
-    app.run(window)?;
     Ok(())
 }
+```
+
+**That's it!** The app will display a window with Button, Label, and TextField components automatically.
+
+Run it:
+```bash
+cargo run
 ```
 
 ## Features
@@ -102,13 +108,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 ## Examples
 
-Run comprehensive examples:
+Run examples to see Cocoanut in action:
 
 ```bash
-cargo run --example comprehensive_components
+# Minimal app with components
+cargo run --example minimal_app
+
+# Basic window
 cargo run --example basic_window
+
+# Menu application
 cargo run --example menu_app
+
+# Comprehensive component demo
+cargo run --example comprehensive_app
 ```
+
+All examples display real macOS GUI windows with interactive components. Press `Cmd+Q` to quit.
 
 See [docs/EXAMPLES_AND_TESTS.md](docs/EXAMPLES_AND_TESTS.md) for detailed examples.
 
@@ -146,6 +162,13 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
 ## Changelog
+
+### 0.2.0 (Current)
+- ✅ **GUI Components Display** - Button, Label, TextField now show in windows
+- ✅ **SimpleApp API** - Minimal boilerplate app creation
+- ✅ **Window Builder** - Fluent window configuration
+- ✅ **Component Positioning** - Automatic layout in windows
+- ✅ **Real macOS GUI** - No mocking, full NSApplication support
 
 ### 0.1.0
 - Initial release

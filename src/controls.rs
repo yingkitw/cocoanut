@@ -91,7 +91,9 @@ impl Button {
             }
             
             // Set button title
-            let _: () = msg_send![ns_button, setTitle: title_cstr.as_ptr()];
+            let ns_string_class = objc::class!(NSString);
+            let title_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String: title_cstr.as_ptr()];
+            let _: () = msg_send![ns_button, setTitle: title_nsstring];
             
             // Set button style
             let _: () = msg_send![ns_button, setButtonType: 0]; // NSButtonTypeMomentaryPushIn
@@ -120,7 +122,9 @@ impl Button {
         unsafe {
             let title_cstr = CString::new(title)
                 .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
-            let _: () = msg_send![self.ns_button, setTitle: title_cstr.as_ptr()];
+            let ns_string_class = objc::class!(NSString);
+            let title_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String: title_cstr.as_ptr()];
+            let _: () = msg_send![self.ns_button, setTitle: title_nsstring];
             self.title = title.to_string();
             Ok(())
         }
@@ -128,6 +132,11 @@ impl Button {
     
     /// Get the underlying NSButton pointer
     pub(crate) fn ns_button(&self) -> *mut Object {
+        self.ns_button
+    }
+    
+    /// Get the button as a view for adding to windows
+    pub fn as_view(&self) -> *mut Object {
         self.ns_button
     }
 }
@@ -188,7 +197,9 @@ impl Label {
             }
             
             // Set label properties
-            let _: () = msg_send![ns_label, setStringValue: text_cstr.as_ptr()];
+            let ns_string_class = objc::class!(NSString);
+            let text_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String: text_cstr.as_ptr()];
+            let _: () = msg_send![ns_label, setStringValue: text_nsstring];
             let _: () = msg_send![ns_label, setBezeled: false];
             let _: () = msg_send![ns_label, setDrawsBackground: false];
             let _: () = msg_send![ns_label, setEditable: false];
@@ -218,7 +229,9 @@ impl Label {
         unsafe {
             let text_cstr = CString::new(text)
                 .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
-            let _: () = msg_send![self.ns_label, setStringValue: text_cstr.as_ptr()];
+            let ns_string_class = objc::class!(NSString);
+            let text_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String: text_cstr.as_ptr()];
+            let _: () = msg_send![self.ns_label, setStringValue: text_nsstring];
             self.text = text.to_string();
             Ok(())
         }
@@ -226,6 +239,11 @@ impl Label {
     
     /// Get the underlying NSTextField pointer
     pub(crate) fn ns_label(&self) -> *mut Object {
+        self.ns_label
+    }
+    
+    /// Get the label as a view for adding to windows
+    pub fn as_view(&self) -> *mut Object {
         self.ns_label
     }
 }
@@ -286,7 +304,9 @@ impl TextField {
             }
             
             // Set text field properties
-            let _: () = msg_send![ns_text_field, setStringValue: text_cstr.as_ptr()];
+            let ns_string_class = objc::class!(NSString);
+            let text_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String: text_cstr.as_ptr()];
+            let _: () = msg_send![ns_text_field, setStringValue: text_nsstring];
             let _: () = msg_send![ns_text_field, setBezeled: true];
             let _: () = msg_send![ns_text_field, setDrawsBackground: true];
             let _: () = msg_send![ns_text_field, setEditable: true];
@@ -316,7 +336,9 @@ impl TextField {
         unsafe {
             let text_cstr = CString::new(text)
                 .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
-            let _: () = msg_send![self.ns_text_field, setStringValue: text_cstr.as_ptr()];
+            let ns_string_class = objc::class!(NSString);
+            let text_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String: text_cstr.as_ptr()];
+            let _: () = msg_send![self.ns_text_field, setStringValue: text_nsstring];
             self.text = text.to_string();
             Ok(())
         }
@@ -324,6 +346,11 @@ impl TextField {
     
     /// Get the underlying NSTextField pointer
     pub(crate) fn ns_text_field(&self) -> *mut Object {
+        self.ns_text_field
+    }
+    
+    /// Get the text field as a view for adding to windows
+    pub fn as_view(&self) -> *mut Object {
         self.ns_text_field
     }
 }

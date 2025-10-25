@@ -46,7 +46,9 @@ impl Application {
             // Set the application name
             let name_cstr = CString::new(name)
                 .map_err(|e| CocoanutError::InvalidParameter(e.to_string()))?;
-            let _: () = msg_send![app, setApplicationName: name_cstr.as_ptr()];
+            let ns_string_class = objc::class!(NSString);
+            let name_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String:name_cstr.as_ptr()];
+            let _: () = msg_send![app, setApplicationName: name_nsstring];
             
             Ok(Application {
                 app,

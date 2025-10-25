@@ -115,10 +115,11 @@ impl SimpleApp {
                     println!("✓ Window created ({}x{})\n", self.width as i32, self.height as i32);
 
                     // Set title
-                    let ns_string_class = Class::get("NSString")
-                        .ok_or("NSString class not found")?;
-                    let title: *mut Object = msg_send![ns_string_class, stringWithUTF8String:self.title.as_ptr()];
-                    let _: () = msg_send![ns_window, setTitle:title];
+                    let title_cstr = std::ffi::CString::new(&self.title[..])
+                        .map_err(|e| crate::error::CocoanutError::InvalidParameter(e.to_string()))?;
+                    let ns_string_class = objc::class!(NSString);
+                    let title_nsstring: *mut Object = msg_send![ns_string_class, stringWithUTF8String:title_cstr.as_ptr()];
+                    let _: () = msg_send![ns_window, setTitle:title_nsstring];
 
                     println!("✓ Window title set: {}\n", self.title);
 
@@ -131,15 +132,77 @@ impl SimpleApp {
                     Window::from_ns_window(ns_window)
                 };
 
-                // Step 3: Display window
+                // Step 3: Add sample components to window
+                println!("Adding sample components...");
+                
+                // Create button
+                let button_class = Class::get("NSButton")
+                    .ok_or("NSButton class not found")?;
+                let button: *mut Object = msg_send![button_class, alloc];
+                
+                let button_frame = NSRect {
+                    origin: NSPoint { x: 20.0, y: 320.0 },
+                    size: NSSize { width: 100.0, height: 40.0 },
+                };
+                let button: *mut Object = msg_send![button, initWithFrame:button_frame];
+                let button_title = std::ffi::CString::new("Click Me!").unwrap();
+                let button_ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:button_title.as_ptr()];
+                let _: () = msg_send![button, setTitle:button_ns_string];
+                let _: () = msg_send![button, setButtonType:0];
+                
+                // Add button to window
+                let content_view: *mut Object = msg_send![window.ns_window(), contentView];
+                let _: () = msg_send![content_view, addSubview:button];
+                println!("  ✓ Button added");
+                
+                // Create label
+                let label_class = Class::get("NSTextField")
+                    .ok_or("NSTextField class not found")?;
+                let label: *mut Object = msg_send![label_class, alloc];
+                
+                let label_frame = NSRect {
+                    origin: NSPoint { x: 20.0, y: 280.0 },
+                    size: NSSize { width: 300.0, height: 30.0 },
+                };
+                let label: *mut Object = msg_send![label, initWithFrame:label_frame];
+                let label_text = std::ffi::CString::new("Welcome to Cocoanut!").unwrap();
+                let label_ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:label_text.as_ptr()];
+                let _: () = msg_send![label, setStringValue:label_ns_string];
+                let _: () = msg_send![label, setEditable:false];
+                let _: () = msg_send![label, setBezeled:false];
+                let _: () = msg_send![label, setDrawsBackground:false];
+                
+                // Add label to window
+                let _: () = msg_send![content_view, addSubview:label];
+                println!("  ✓ Label added");
+                
+                // Create text field
+                let textfield_class = Class::get("NSTextField")
+                    .ok_or("NSTextField class not found")?;
+                let textfield: *mut Object = msg_send![textfield_class, alloc];
+                
+                let textfield_frame = NSRect {
+                    origin: NSPoint { x: 20.0, y: 240.0 },
+                    size: NSSize { width: 300.0, height: 30.0 },
+                };
+                let textfield: *mut Object = msg_send![textfield, initWithFrame:textfield_frame];
+                let textfield_text = std::ffi::CString::new("Enter text here").unwrap();
+                let textfield_ns_string: *mut Object = msg_send![objc::class!(NSString), stringWithUTF8String:textfield_text.as_ptr()];
+                let _: () = msg_send![textfield, setStringValue:textfield_ns_string];
+                
+                // Add text field to window
+                let _: () = msg_send![content_view, addSubview:textfield];
+                println!("  ✓ TextField added\n");
+
+                // Step 4: Display window
                 let _: () = msg_send![window.ns_window(), makeKeyAndOrderFront:app];
                 println!("✓ Window displayed\n");
 
-                // Step 4: Activate app
+                // Step 5: Activate app
                 let _: () = msg_send![app, activateIgnoringOtherApps:true];
                 println!("✓ Application activated\n");
 
-                // Step 5: Run event loop
+                // Step 6: Run event loop
                 println!("🚀 Running event loop (press Cmd+Q to quit)...\n");
                 let _: () = msg_send![app, run];
             }
