@@ -3,10 +3,13 @@ name = "cocoanut"
 version = "0.1.2"
 edition = "2024"
 authors = ["Ying Kit WONG"]
-description = "A Rust wrapper for Cocoa to develop macOS-specific GUI applications"
+description = "A Rust wrapper for Cocoa to develop macOS-specific GUI applications with idiomatic, simple APIs. Includes 67 Streamlit-inspired widgets and macro refactoring for 83% less boilerplate."
 license = "Apache-2.0"
 repository = "https://github.com/yingkitw/cocoanut"
-keywords = ["cocoa", "macos", "gui", "native", "appkit"]
+homepage = "https://github.com/yingkitw/cocoanut"
+documentation = "https://docs.rs/cocoanut"
+readme = "README.md"
+keywords = ["cocoa", "macos", "gui", "native", "appkit", "streamlit", "widgets"]
 categories = ["gui", "os::macos-apis"]
 
 # Ensure macOS frameworks are linked via build script
@@ -119,10 +122,6 @@ path = "examples/comprehensive_app.rs"
 [[example]]
 name = "minimal_app"
 path = "examples/minimal_app.rs"
-
-[[example]]
-name = "interactive_controls"
-path = "examples/interactive_controls.rs"
 
 [profile.dev]
 # Fast compilation for development

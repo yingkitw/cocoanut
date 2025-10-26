@@ -6,6 +6,7 @@ pub mod events;
 pub mod layout;
 pub mod builder;
 pub mod essential_features;
+pub mod target_action;
 
 // Phase 1: Streamlit Migration - Display Elements
 pub mod display;
@@ -36,6 +37,7 @@ pub use events::*;
 pub use layout::*;
 pub use builder::*;
 pub use essential_features::*;
+pub use target_action::*;
 pub use display::*;
 pub use data_display::*;
 pub use feedback::*;

@@ -41,6 +41,7 @@ pub mod utils;
 
 // High-level API
 pub mod window;
+pub mod window_v2;
 pub mod menu;
 pub mod simple_app {
     pub mod component;

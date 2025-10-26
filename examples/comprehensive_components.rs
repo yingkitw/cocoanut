@@ -9,6 +9,7 @@
 //! - Best practices for component organization
 
 use cocoanut::prelude::*;
+use cocoanut::simple_app::Layout;
 
 /// Example 1: Creating and Styling Buttons
 /// 
@@ -444,30 +445,50 @@ fn example_spacers() -> std::result::Result<(), Box<dyn std::error::Error>> {
 
 /// Main function running all examples
 fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
-    println!("🥥 Comprehensive GUI Components Example");
-    println!("========================================");
-
-    // Run all examples
-    example_buttons()?;
-    example_labels()?;
-    example_text_fields()?;
-    example_vstack_layout()?;
-    example_hstack_layout()?;
-    example_spacing()?;
-    example_alignment()?;
-    example_carbon_colors()?;
-    example_typography()?;
-    example_component_styles()?;
-    example_custom_styles()?;
-    example_spacers()?;
-
-    println!("\n✅ All examples completed successfully!");
-    println!("\n📚 Key Takeaways:");
-    println!("  • Use builders for all component creation");
-    println!("  • Leverage VStack/HStack for layout");
-    println!("  • Apply Carbon Design System colors");
-    println!("  • Use semantic typography scales");
-    println!("  • Customize styles with builder pattern");
+    app("Comprehensive Components")
+        .title("🥥 Comprehensive GUI Components Example")
+        .size(900.0, 1000.0)
+        .centered(true)
+        .layout(Layout::default())
+        // Buttons
+        .add(Comp::new(Kind::Label).text("📘 Button Components").size(400.0, 25.0))
+        .add(Comp::new(Kind::Button).text("Basic Button").size(150.0, 35.0))
+        .add(Comp::new(Kind::Button).text("Click Me!").size(150.0, 35.0))
+        .add(Comp::new(Kind::Button).text("Submit").size(150.0, 35.0))
+        // Text Fields
+        .add(Comp::new(Kind::Label).text("⌨️  TextField Components").size(400.0, 25.0))
+        .add(Comp::new(Kind::TextField).text("Enter your name").size(350.0, 30.0))
+        .add(Comp::new(Kind::TextField).text("Enter email").size(350.0, 30.0))
+        .add(Comp::new(Kind::TextField).text("Enter message").size(350.0, 30.0))
+        // Sliders
+        .add(Comp::new(Kind::Label).text("🎚️  Slider Components").size(400.0, 25.0))
+        .add(Comp::new(Kind::Slider).text("Volume").size(300.0, 25.0))
+        .add(Comp::new(Kind::Slider).text("Brightness").size(300.0, 25.0))
+        // Checkboxes
+        .add(Comp::new(Kind::Label).text("☑️  Checkbox Components").size(400.0, 25.0))
+        .add(Comp::new(Kind::Checkbox).text("Enable notifications").size(250.0, 25.0))
+        .add(Comp::new(Kind::Checkbox).text("Dark mode").size(250.0, 25.0))
+        .add(Comp::new(Kind::Checkbox).text("Auto-save").size(250.0, 25.0))
+        // Radio Buttons
+        .add(Comp::new(Kind::Label).text("🔘 Radio Button Components").size(400.0, 25.0))
+        .add(Comp::new(Kind::Radio).text("Option A").size(200.0, 25.0))
+        .add(Comp::new(Kind::Radio).text("Option B").size(200.0, 25.0))
+        .add(Comp::new(Kind::Radio).text("Option C").size(200.0, 25.0))
+        // Dropdowns
+        .add(Comp::new(Kind::Label).text("📋 Dropdown Components").size(400.0, 25.0))
+        .add(Comp::new(Kind::Dropdown).text("Select...").size(250.0, 30.0))
+        .add(Comp::new(Kind::Dropdown).text("Choose theme").size(250.0, 30.0))
+        // Container/Group Components (Available but not yet rendered in GUI)
+        .add(Comp::new(Kind::Label).text("📦 Container/Group Components").size(400.0, 25.0))
+        .add(Comp::new(Kind::Label).text("ℹ️  Containers available - run 'containers_demo' or 'containers_gui_demo'").size(600.0, 20.0))
+        .add(Comp::new(Kind::Label).text("ScrollView - Scrollable content areas").size(400.0, 20.0))
+        .add(Comp::new(Kind::Label).text("TabView - Tabbed interfaces").size(400.0, 20.0))
+        .add(Comp::new(Kind::Label).text("SplitView - Resizable panes").size(400.0, 20.0))
+        .add(Comp::new(Kind::Label).text("GroupBox - Grouped controls").size(400.0, 20.0))
+        // Summary
+        .add(Comp::new(Kind::Label).text("✅ All Component Types Demonstrated").size(400.0, 25.0))
+        .add(Comp::new(Kind::Label).text("Buttons, TextFields, Sliders, Checkboxes, Radios, Dropdowns, Containers").size(700.0, 20.0))
+        .run()?;
 
     Ok(())
 }

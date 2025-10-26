@@ -183,22 +183,29 @@ impl SimpleApp {
                 }
 
                 // Step 4: Display window
-                let _: () = msg_send![window.ns_window(), makeKeyAndOrderFront:app];
+                let ns_window = window.ns_window();
+                let _: () = msg_send![ns_window, makeKeyAndOrderFront:app];
                 println!("✓ Window displayed\n");
 
-                // Step 5: Activate app
+                // Step 5: Activate app and bring window to front
                 let _: () = msg_send![app, activateIgnoringOtherApps:true];
                 println!("✓ Application activated\n");
+                
+                // Ensure window is on top
+                let _: () = msg_send![ns_window, orderFrontRegardless];
 
                 // Step 6: Configure window to stop app when closed
-                let _: () = msg_send![window.ns_window(), setReleasedWhenClosed:true];
+                let _: () = msg_send![ns_window, setReleasedWhenClosed:true];
                 
                 // Make close button terminate the app
-                let ns_window = window.ns_window();
                 let _: () = msg_send![app, setDelegate:ns_window];
 
                 // Step 7: Run event loop
                 println!("🚀 Running event loop (close window or press Cmd+Q to quit)...\n");
+                
+                // Small delay to ensure window is rendered before event loop
+                std::thread::sleep(std::time::Duration::from_millis(100));
+                
                 let _: () = msg_send![app, run];
             }
 
@@ -234,6 +241,10 @@ impl SimpleApp {
                     super::component::Kind::Slider => "NSSlider",
                     super::component::Kind::Dropdown => "NSPopUpButton",
                     super::component::Kind::TextArea => "NSTextView",
+                    super::component::Kind::ScrollView => "NSScrollView",
+                    super::component::Kind::TabView => "NSTabView",
+                    super::component::Kind::SplitView => "NSSplitView",
+                    super::component::Kind::GroupBox => "NSBox",
                 };
                 
                 let view_class = Class::get(class_name)
@@ -348,6 +359,42 @@ impl SimpleApp {
                     
                     let white_color: *mut objc::runtime::Object = msg_send![objc::class!(NSColor), whiteColor];
                     let _: () = msg_send![view, setBackgroundColor:white_color];
+                }
+                super::component::Kind::ScrollView => {
+                    let _: () = msg_send![view, setHasVerticalScroller:true];
+                    let _: () = msg_send![view, setHasHorizontalScroller:false];
+                    let _: () = msg_send![view, setAutohidesScrollers:true];
+                    
+                    let light_gray: *mut objc::runtime::Object = msg_send![objc::class!(NSColor), lightGrayColor];
+                    let _: () = msg_send![view, setBackgroundColor:light_gray];
+                }
+                super::component::Kind::TabView => {
+                    let _: () = msg_send![view, setTabPosition:0]; // NSTopTabsBezelBorder
+                    
+                    let tab_item_class = objc::class!(NSTabViewItem);
+                    let tab1: *mut objc::runtime::Object = msg_send![tab_item_class, alloc];
+                    let tab1: *mut objc::runtime::Object = msg_send![tab1, initWithIdentifier:objc::class!(NSString)];
+                    let label1 = std::ffi::CString::new("Tab 1").unwrap();
+                    let label1_ns: *mut objc::runtime::Object = msg_send![objc::class!(NSString), stringWithUTF8String:label1.as_ptr()];
+                    let _: () = msg_send![tab1, setLabel:label1_ns];
+                    let _: () = msg_send![view, addTabViewItem:tab1];
+                    
+                    let tab2: *mut objc::runtime::Object = msg_send![tab_item_class, alloc];
+                    let tab2: *mut objc::runtime::Object = msg_send![tab2, initWithIdentifier:objc::class!(NSString)];
+                    let label2 = std::ffi::CString::new("Tab 2").unwrap();
+                    let label2_ns: *mut objc::runtime::Object = msg_send![objc::class!(NSString), stringWithUTF8String:label2.as_ptr()];
+                    let _: () = msg_send![tab2, setLabel:label2_ns];
+                    let _: () = msg_send![view, addTabViewItem:tab2];
+                }
+                super::component::Kind::SplitView => {
+                    let _: () = msg_send![view, setVertical:true];
+                    let _: () = msg_send![view, setDividerStyle:1]; // NSSplitViewDividerStyleThin
+                }
+                super::component::Kind::GroupBox => {
+                    let title = std::ffi::CString::new(comp.text.as_str()).unwrap();
+                    let ns_string: *mut objc::runtime::Object = msg_send![objc::class!(NSString), stringWithUTF8String:title.as_ptr()];
+                    let _: () = msg_send![view, setTitle:ns_string];
+                    let _: () = msg_send![view, setBorderType:1]; // NSGrooveBorder
                 }
             }
         }

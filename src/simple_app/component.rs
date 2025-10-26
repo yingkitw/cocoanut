@@ -21,6 +21,14 @@ pub enum Kind {
     Dropdown,
     /// TextArea (multi-line text)
     TextArea,
+    /// ScrollView container
+    ScrollView,
+    /// TabView container
+    TabView,
+    /// SplitView container
+    SplitView,
+    /// GroupBox container
+    GroupBox,
 }
 
 impl fmt::Display for Kind {
@@ -34,6 +42,10 @@ impl fmt::Display for Kind {
             Kind::Slider => write!(f, "Slider"),
             Kind::Dropdown => write!(f, "Dropdown"),
             Kind::TextArea => write!(f, "TextArea"),
+            Kind::ScrollView => write!(f, "ScrollView"),
+            Kind::TabView => write!(f, "TabView"),
+            Kind::SplitView => write!(f, "SplitView"),
+            Kind::GroupBox => write!(f, "GroupBox"),
         }
     }
 }
@@ -63,6 +75,10 @@ impl Comp {
             Kind::Slider => ("Slider".to_string(), 250.0, 25.0),
             Kind::Dropdown => ("Select".to_string(), 200.0, 30.0),
             Kind::TextArea => ("Text".to_string(), 400.0, 100.0),
+            Kind::ScrollView => ("ScrollView".to_string(), 350.0, 200.0),
+            Kind::TabView => ("TabView".to_string(), 350.0, 200.0),
+            Kind::SplitView => ("SplitView".to_string(), 350.0, 200.0),
+            Kind::GroupBox => ("GroupBox".to_string(), 350.0, 200.0),
         };
         Self { kind, text, width, height }
     }
